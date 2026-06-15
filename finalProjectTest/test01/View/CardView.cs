@@ -14,7 +14,8 @@ namespace test01.View
         public Card Card { get; }
         public bool IsSelected { get; private set; }
         private bool _isHovering;
-        public event EventHandler CardPlayed;
+        public event EventHandler OnCardPlayed;
+        public event EventHandler OnSelectionChanged;
 
         public CardView(Card card)
         {
@@ -41,6 +42,8 @@ namespace test01.View
                 IsSelected = false;
                 this.Top = 10;
                 this.Invalidate(); //觸發重繪
+                //讓HandView知道卡牌選取發生改變
+                OnSelectionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         private void CardView_MouseEnter(object sender, EventArgs e)
@@ -58,20 +61,38 @@ namespace test01.View
             //點擊已被選中的牌
             if (IsSelected)
             {
-                //觸發自訂事件，讓HandView知道這張牌被打出了
-                CardPlayed?.Invoke(this, EventArgs.Empty);
+                //讓HandView知道這張牌被打出了
+                OnCardPlayed?.Invoke(this, EventArgs.Empty);
             }
-            else
+            else //第一次選中時
             {
                 IsSelected = true;
                 this.Top = 0; //選中時向上移動
                 this.Invalidate();
             }
+
+            //讓HandView知道卡牌選取發生改變
+            OnSelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            //確保Enable改變時會即時重繪
+            this.Invalidate();
         }
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe); //畫出原本的撲克牌圖片
-            if (IsSelected)
+
+            if (!this.Enabled)
+            {
+                //繪製半透明的灰色遮罩
+                using (SolidBrush disabledBrush = new SolidBrush(Color.FromArgb(128, Color.Gray)))
+                {
+                    pe.Graphics.FillRectangle(disabledBrush, 0, 0, this.Width, this.Height);
+                }
+            }
+            else if (IsSelected)
             {
                 //畫綠色粗邊框
                 using (Pen pen = new Pen(Color.Green, 5))

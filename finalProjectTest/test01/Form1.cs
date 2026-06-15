@@ -36,7 +36,7 @@ namespace test01
             gm.Initialize();
 
             this.Click += Background_Click;
-             hand.Location = new Point(0, 400);
+            hand.Location = new Point(0, 400);
         }
         private void Background_Click(object sender, EventArgs e)
         {

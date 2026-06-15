@@ -39,7 +39,7 @@ namespace test01.Model
 
             //大小王
             _cards.Add(new Card(Card.Suit.JOKER, Card.Rank.BLACK));
-            _cards.Add(new Card(Card.Suit.JOKER, Card.Rank.BLACK));
+            _cards.Add(new Card(Card.Suit.JOKER, Card.Rank.RED));
         }
         public void Shuffle()
         {

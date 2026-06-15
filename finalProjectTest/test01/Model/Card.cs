@@ -14,7 +14,7 @@ namespace test01.Model
             DIAMONDS,   //方塊
             HEARTS,     //愛心
             SPADES,     //黑桃
-            JOKER       //鬼牌特殊花色(也就是沒花色)
+            JOKER     //鬼牌特殊花色(也就是沒花色)
         }
         public enum Rank
         {
@@ -44,6 +44,18 @@ namespace test01.Model
             this.SuitType = suit;
             this.RankType = rank;
             this.Weight = (int)rank;
+        }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Card other))
+                return false;
+
+            return this.SuitType == other.SuitType &&
+                   this.RankType == other.RankType;
+        }
+        public override int GetHashCode()
+        {
+            return (int)SuitType * 100 + (int)RankType;
         }
     }
 }

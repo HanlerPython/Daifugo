@@ -58,7 +58,8 @@ namespace test01.View
                 int currentX = startX + (i * spacing);
 
                 cardView.Location = new Point(currentX, y);
-                cardView.CardPlayed += OnCardPlayed;
+                cardView.OnCardPlayed += HandleCardPlayed;
+                cardView.OnSelectionChanged += HandleSelectionChanged;
 
                 this.Controls.Add(cardView);
             }
@@ -73,7 +74,39 @@ namespace test01.View
                 }
             }
         }
-        private void OnCardPlayed(object sender, EventArgs e)
+        private void HandleSelectionChanged(object sender, EventArgs e)
+        {
+            List<Card> selectedCards = new List<Card>();
+            foreach (Control control in this.Controls)
+            {
+                if (control is CardView cardView && cardView.IsSelected)
+                {
+                    selectedCards.Add(cardView.Card);
+                }
+            }
+
+            List<Card> recommendedCards = (List<Card>)_gameManager.UpdateRecommendations(selectedCards);
+            //所有牌都能打
+            if (recommendedCards == null){
+                foreach (Control control in this.Controls)
+                {
+                    if (control is CardView cardView)
+                        cardView.Enabled = true;
+                }
+
+                return;
+            }
+
+            foreach (Control control in this.Controls)
+            {
+                if (control is CardView cardView)
+                {
+                    //根據是否有推薦決定是否將其啟用
+                    cardView.Enabled = recommendedCards.Contains(cardView.Card);
+                }
+            }
+        }
+        private void HandleCardPlayed(object sender, EventArgs e)
         {
             List<Card> cards = new List<Card>();
 
