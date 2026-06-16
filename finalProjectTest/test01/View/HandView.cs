@@ -49,7 +49,7 @@ namespace test01.View
             int spacing = 45;
             int cardWidth = cardViews[0].Width;
             int totalWidth = ((cardCount - 1) * spacing) + cardWidth;
-            int windowWidth = Form1.WindowWidth;
+            int windowWidth = MainForm.WindowWidth;
             int startX = (windowWidth - totalWidth) / 2;
 
             for (int i = 0; i < cardCount; i++)

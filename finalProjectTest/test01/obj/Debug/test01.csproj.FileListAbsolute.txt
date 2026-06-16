@@ -2,7 +2,6 @@ C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\bin\Debug\test01.e
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\bin\Debug\test01.exe
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\bin\Debug\test01.pdb
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.csproj.AssemblyReference.cache
-C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.Form1.resources
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.Properties.Resources.resources
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.csproj.GenerateResource.cache
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.csproj.CoreCompileInputs.cache
@@ -128,3 +127,4 @@ C:\Users\user\Desktop\output1\finalProjectTest\test01\obj\Debug\test01.csproj.Ge
 C:\Users\user\Desktop\output1\finalProjectTest\test01\obj\Debug\test01.csproj.CoreCompileInputs.cache
 C:\Users\user\Desktop\output1\finalProjectTest\test01\obj\Debug\test01.exe
 C:\Users\user\Desktop\output1\finalProjectTest\test01\obj\Debug\test01.pdb
+C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.MainForm.resources

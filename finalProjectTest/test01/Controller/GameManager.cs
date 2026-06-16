@@ -46,23 +46,12 @@ namespace test01.Controller
             _currentPlay = null;
             _currentHands = HandsEvaluator.Hands.Null;
             _isReversed = false;
-            /*
             foreach (Player player in _players)
             {
                 player.AddCards(_deck.Draw(13)); //just for test
             }
-            */
 
-            var hearts = Enumerable.Range(0, 13)
-                           .Select(w => new Card(Card.Suit.HEARTS, (Card.Rank)w))
-                           .ToList();
-
-            // 加入至當前玩家手牌
-            hearts.Add(new Card(Card.Suit.JOKER, Card.Rank.BLACK));
-            hearts.Add(new Card(Card.Suit.JOKER, Card.Rank.RED));
-            _currentPlayer.AddCards(hearts);
-
-            //如果有人訂閱這個事件，就觸發它
+            //廣播手牌改變事件
             OnPlayerHandChanged?.Invoke(null, EventArgs.Empty);
         }
         public IReadOnlyList<Card> GetCurrentPlayerHand()
