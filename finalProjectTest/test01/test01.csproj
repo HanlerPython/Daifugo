@@ -50,6 +50,10 @@
     <Compile Include="Controller\States\AppStates\AppManager.cs" />
     <Compile Include="Controller\States\AppStates\IAppState.cs" />
     <Compile Include="Controller\States\AppStates\PlayingState.cs" />
+    <Compile Include="Controller\States\GameStates\IGameState.cs" />
+    <Compile Include="Controller\States\GameStates\PlayerTurnState.cs" />
+    <Compile Include="Controller\States\GameStates\RoundInitState.cs" />
+    <Compile Include="Controller\States\GameStates\WaitingDiscardState.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -58,24 +62,32 @@
     </Compile>
     <Compile Include="Model\Card.cs" />
     <Compile Include="Model\Deck.cs" />
+    <Compile Include="Model\GameSnapshot.cs" />
     <Compile Include="Model\HandsEvaluator.cs" />
+    <Compile Include="Model\Interfaces\IPlayerStrategy.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\CardView.cs">
+    <Compile Include="View\Playing\CardView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="View\HandView.cs">
+    <Compile Include="View\Playing\DeskView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="View\HandView.Designer.cs">
+    <Compile Include="View\Playing\DeskView.Designer.cs">
+      <DependentUpon>DeskView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Playing\HandView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Playing\HandView.Designer.cs">
       <DependentUpon>HandView.cs</DependentUpon>
     </Compile>
     <Compile Include="View\ResourceManager.cs" />
-    <Compile Include="View\UserControls\PlayingControl.cs">
+    <Compile Include="View\Playing\PlayingControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="View\UserControls\PlayingControl.Designer.cs">
+    <Compile Include="View\Playing\PlayingControl.Designer.cs">
       <DependentUpon>PlayingControl.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="MainForm.resx">
@@ -90,6 +102,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\Playing\PlayingControl.resx">
+      <DependentUpon>PlayingControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

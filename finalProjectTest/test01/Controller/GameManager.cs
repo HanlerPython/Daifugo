@@ -5,34 +5,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using test01.Controller.States.GameStates;
 using test01.Model;
+using test01.Model.Interfaces;
 
 namespace test01.Controller
 {
     public class GameManager
     {
+        private IGameState _currentState;
         private readonly List<Player> _players;
         public IReadOnlyList<Player> Players => _players.AsReadOnly();
-        private readonly Deck _deck;
-        private List<Card> _currentPlay;
-        public IReadOnlyList<Card> CurretnPlay => _currentPlay?.AsReadOnly();
-        private HandsEvaluator.Hands _currentHands;
-        private bool _isReversed; //是否為大革命狀態或J反
-        private Player _currentPlayer;
-        private readonly HandsEvaluator _handsEvaluator;
+        public Deck Deck { get; private set; }
+        public List<Card> CurrentPlay { get; set; }
+        public HandsEvaluator.Hands CurrentHands { get; set; }
+        public bool IsReversed { get; set; } //是否為大革命狀態或J反
+        public int CurrentPlayerIdx { get; set; }
+        public HandsEvaluator HandsEvaluator { get; }
+        public GreedyAIStrategy Ai { get; }
+
 
         //當玩家手牌張數發生變化時觸發
         public event EventHandler OnPlayerHandChanged;
+        //使外部改變牌桌狀態
+        public event EventHandler OnDeskChanged;
 
         public GameManager()
         {
             _players = new List<Player>();
-            _deck = new Deck();
-            _currentPlay = null;
-            _currentHands = HandsEvaluator.Hands.Null;
-            _isReversed = false;
-            _currentPlayer = null;
-            _handsEvaluator = new HandsEvaluator();
+            Deck = new Deck();
+            HandsEvaluator = new HandsEvaluator();
+            Ai = new GreedyAIStrategy();
         }
         public void Initialize()
         {
@@ -40,46 +43,48 @@ namespace test01.Controller
             _players.Add(new Player(1, "Chisa"));
             _players.Add(new Player(2, "Yachiyo"));
             _players.Add(new Player(3, "Doro"));
-            _currentPlayer = _players[0];
-            _deck.Create();
-            _deck.Shuffle();
-            _currentPlay = null;
-            _currentHands = HandsEvaluator.Hands.Null;
-            _isReversed = false;
-            foreach (Player player in _players)
-            {
-                player.AddCards(_deck.Draw(13)); //just for test
-            }
-
-            //廣播手牌改變事件
-            OnPlayerHandChanged?.Invoke(null, EventArgs.Empty);
+            //進入輪次事前準備
+            ChangeState(new RoundInitState());
         }
-        public IReadOnlyList<Card> GetCurrentPlayerHand()
+        public int GetNextPlayerIdx()
         {
-            return _currentPlayer.Hand;
+            int index = CurrentPlayerIdx, initial = index;
+            while (true) {
+                index++;
+                if (index > 3)
+                    index = 0;
+                //沒有還在遊戲中的玩家
+                if (index == initial)
+                    return -1;
+
+                //跳過脫出狀態的玩家
+                if (Players[index].StateType == Player.State.Finished)
+                    continue;
+
+                return index;
+            }
+        }
+        public void ChangeState(IGameState newState)
+        {
+            _currentState = newState;
+            _currentState.Enter(this);
         }
         public IEnumerable<Card> UpdateRecommendations(IEnumerable<Card> selectedCards)
         {
-            return _handsEvaluator.Recommand(_currentPlayer.Hand, selectedCards, CurretnPlay, _currentHands, false);
+            return HandsEvaluator.Recommand(Players[CurrentPlayerIdx].Hand, selectedCards, CurrentPlay, CurrentHands, false);
         }
-        public void TryPlayCard(IEnumerable<Card> cardsToPlay)
+        public void NotifyPlayerHandChanged()
         {
-            List<Card> sortedPlay = cardsToPlay
-                .OrderBy(c => c.RankType)
-                .ThenBy(c => c.SuitType)
-                .ToList();
-            //先檢查是否合法
-            var playHands = _handsEvaluator.Evaluate(sortedPlay, CurretnPlay, _isReversed, _currentHands);
-            if (playHands == HandsEvaluator.Hands.Illegal)
-            {
-                MessageBox.Show("牌型不合法!", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            _currentHands = playHands;
-            _currentPlayer.RemoveCards(sortedPlay);
-            _currentPlay = sortedPlay;
-            OnPlayerHandChanged?.Invoke(null, EventArgs.Empty);
+            OnPlayerHandChanged?.Invoke(this, EventArgs.Empty);
         }
+        public void NotifyDeskChanged()
+        {
+            OnDeskChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        //由個別state實作
+        public bool TryPlayCard(IEnumerable<Card> cards) => _currentState.PlayCard(this, cards);
+        public bool TryPass() => _currentState.Pass(this);
+        public bool TrySubmitSpecialAction(IEnumerable<Card> cards) => _currentState.SubmitSpecialAction(this, cards);
     }
 }

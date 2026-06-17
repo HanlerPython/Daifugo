@@ -12,7 +12,7 @@ namespace test01.Controller.States.AppStates
         private IAppState _currentState;
 
         //用來放置UserControl的容器，即當前畫面
-        private Control _mainContainer;
+        private readonly Control _mainContainer;
 
         public AppManager(Control mainContainer)
         {

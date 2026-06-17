@@ -32,7 +32,6 @@ namespace test01
             _mainPanel = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = Color.FromArgb(40, 44, 52)
             };
             this.Controls.Add(_mainPanel);
         }
@@ -46,6 +45,7 @@ namespace test01
             _appManager = new AppManager(_mainPanel);
             // 啟動狀態機。目前為開發測試階段，可直接進入 PlayingState
             // 未來完成主選單後，改為 _appManager.ChangeState(new StartMenuState());
+            //StartMenuState
             _appManager.ChangeState(new PlayingState());
         }
     }

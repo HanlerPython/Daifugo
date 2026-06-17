@@ -4,33 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using test01.View;
-using test01.View.UserControls;
+using test01.View.Playing;
 
 namespace test01.Controller.States.AppStates
 {
     public class PlayingState : IAppState
     {
         private PlayingControl _view;
-        private GameManager _gm;
+        private GameManager _gameManager;
 
         public void Enter(AppManager manager)
         {
             _view = new PlayingControl();
-            _gm = new GameManager();
+            _gameManager = new GameManager();
 
-            //初始化手牌顯示元件以及GM
-            _view.Hand.Initialize(_gm);
-            _gm.Initialize();
+            //初始化顯示元件以及GM
+            _view.Hand.Initialize(_gameManager);
+            _view.Desk.Initialize(_gameManager);
+            _gameManager.Initialize();
+
+            //訂閱pass按鈕事件
+            _view.OnPassRequested += HandlePlayerPass;
 
             //呼叫app manager的渲染功能
             manager.ShowView(_view);
         }
-
         public void Exit(AppManager manager)
         {
             //離開時釋放資源
             _view?.Dispose();
-            _gm = null;
+            _gameManager = null;
+        }
+        private void HandlePlayerPass()
+        {
+            _gameManager.TryPass();
         }
     }
 }

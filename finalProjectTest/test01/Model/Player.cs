@@ -10,8 +10,15 @@ namespace test01.Model
 {
     public class Player
     {
+        public enum State
+        {
+            Active,
+            Finished //脫出
+        }
+
         public int Id { get; }
         public string Name { get; }
+        public State StateType { get; set; }
         private readonly List<Card> _hand;
         public IReadOnlyList<Card> Hand => _hand.AsReadOnly(); //對外僅供檢視的手牌
 
@@ -19,6 +26,7 @@ namespace test01.Model
         {
             this.Id = id;
             this.Name = name;
+            this.StateType = State.Active;
             this._hand = new List<Card>();
         }
         public void AddCards(IEnumerable<Card> cards)
@@ -44,7 +52,7 @@ namespace test01.Model
         {
             if (_hand.Count == 0)
             {
-                // 標記該玩家已脫出...
+                StateType = State.Finished;
             }
         }
         private void SortHand()

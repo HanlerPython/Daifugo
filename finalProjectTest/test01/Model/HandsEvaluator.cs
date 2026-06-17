@@ -351,7 +351,10 @@ namespace test01.Model
 
             //取得目標花色與選取範圍的邊界 (最小與最大點數)
             Card.Suit targetSuit = selectedCards.First().SuitType;
-            var sortedSelected = selectedCards.OrderBy(c => c.Weight).ToList();
+            var sortedSelected = selectedCards
+                .Where(c => c.SuitType == targetSuit)
+                .OrderBy(c => c.Weight)
+                .ToList();
             int minSelWeight = sortedSelected.First().Weight;
             int maxSelWeight = sortedSelected.Last().Weight;
 
@@ -379,11 +382,13 @@ namespace test01.Model
                 return matchingCards;
             }
 
-            //剩下可用於向外擴張的Joker數量
-            int remainingJokers = handJokerCount - neededJokersForInternal;
-
             //內部範圍的牌無條件加入
             matchingCards.AddRange(sameSuitHand.Where(c => c.Weight >= minSelWeight && c.Weight <= maxSelWeight));
+
+            //剩下可用於向外擴張的Joker數量
+            int remainingJokers = handJokerCount - neededJokersForInternal;
+            if (remainingJokers == 0) //已經沒得擴張了
+                return matchingCards;
 
             //向左擴張
             int currentJokers = remainingJokers;
@@ -431,7 +436,7 @@ namespace test01.Model
             //去除重複加入的元素並重新排序後回傳
             return matchingCards.Distinct().OrderBy(c => c.Weight).ToList();
         }
-        // 新增多載：受限於場上張數與權重的同花順搜尋
+        //受限於場上張數與權重的同花順搜尋
         private IEnumerable<Card> FindFlush(IEnumerable<Card> hand, IEnumerable<Card> selectedCards, int currentCount, int currentWeight, bool isReversed, int handJokerCount)
         {
             List<Card> matchingCards = new List<Card>();
@@ -455,8 +460,8 @@ namespace test01.Model
             int maxPossibleStartWeight = minSelWeight;
 
             //同花順中的最小與最大權重邊界
-            int ABSOLUTE_MIN_WEIGHT = 0;  // 請依據你的權重定義調整
-            int ABSOLUTE_MAX_WEIGHT = 12; // 請依據你的權重定義調整
+            int ABSOLUTE_MIN_WEIGHT = 0;
+            int ABSOLUTE_MAX_WEIGHT = 12;
 
             //測試每一個可能的順子起點
             for (int startWeight = minPossibleStartWeight; startWeight <= maxPossibleStartWeight; startWeight++)
@@ -499,7 +504,7 @@ namespace test01.Model
 
             return cnt;
         }
-        private int GetHandsWeight(Hands hands, IEnumerable<Card> cards, bool isReversed)
+        public int GetHandsWeight(Hands hands, IEnumerable<Card> cards, bool isReversed)
         {
             if (hands == Hands.SameRank)
             {
