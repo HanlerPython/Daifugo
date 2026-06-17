@@ -61,6 +61,7 @@ namespace test01.Model
 
             return validPlays;
         }
+        //goodmorning
 
         private List<IEnumerable<Card>> GenerateAllSingleCards(List<Card> hand)
         {
