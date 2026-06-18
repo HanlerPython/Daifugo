@@ -52,6 +52,7 @@
     <Compile Include="Controller\States\AppStates\PlayingState.cs" />
     <Compile Include="Controller\States\GameStates\IGameState.cs" />
     <Compile Include="Controller\States\GameStates\PlayerTurnState.cs" />
+    <Compile Include="Controller\States\GameStates\RoundEndState.cs" />
     <Compile Include="Controller\States\GameStates\RoundInitState.cs" />
     <Compile Include="Controller\States\GameStates\WaitingDiscardState.cs" />
     <Compile Include="MainForm.cs">

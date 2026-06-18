@@ -15,12 +15,13 @@ namespace test01.View
     public partial class HandView : UserControl
     {
         private GameManager _gameManager;
+        private readonly List<CardView> _cardViews;
 
         public HandView()
         {
             InitializeComponent();
-            this.AutoSize = true;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            this.AutoScaleMode = AutoScaleMode.None;
+            _cardViews = new List<CardView>();
         }
         public void Initialize(GameManager gameManager)
         {
@@ -31,36 +32,27 @@ namespace test01.View
         {
             var oldCards = this.Controls.Cast<Control>().ToList();
             this.Controls.Clear();
+            _cardViews.Clear();
             foreach (var ctrl in oldCards)
             {
                 ctrl.Dispose();
             }
 
-            int cardCount = hand.Count();
-            if (cardCount == 0) return;
+            if (!hand.Any())
+                return;
 
-            List<CardView> cardViews = new List<CardView>();
+            int y = 10; //預留選取上浮空間
             foreach (var card in hand)
             {
-                cardViews.Add(new CardView(card));
-            }
-
-            int y = 10; //預留10px頂部浮動空間供選取時上浮
-            int spacing = 45;
-            int cardWidth = cardViews[0].Width;
-            int totalWidth = ((cardCount - 1) * spacing) + cardWidth;
-            int windowWidth = MainForm.WindowWidth;
-            int startX = (windowWidth - totalWidth) / 2;
-
-            for (int i = 0; i < cardCount; i++)
-            {
-                CardView cardView = cardViews[i];
-                int currentX = startX + (i * spacing);
-
-                cardView.Location = new Point(currentX, y);
+                CardView cardView = new CardView(card)
+                {
+                    //x的位置透過OnLayout統一計算
+                    Location = new Point(0, y)
+                };
                 cardView.OnCardPlayed += HandleCardPlayed;
                 cardView.OnSelectionChanged += HandleSelectionChanged;
 
+                _cardViews.Add(cardView);
                 this.Controls.Add(cardView);
             }
         }
@@ -118,22 +110,36 @@ namespace test01.View
                 }
             }
 
-            if (cards.Count > 0)
+            if (cards.Any())
             {
-                _gameManager.TryPlayCard(cards);
+                if (!_gameManager.TryPlayCard(cards))
+                    MessageBox.Show("牌型不合法!", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                    //更新當前玩家手牌
+                    Invoke(new Action(() => HandleHandChanged(sender, e)));
             }
         }
         private void HandleHandChanged(object sender, EventArgs e)
         {
-            //確保主執行緒觸發時才作用
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new Action(() => HandleHandChanged(sender, e)));
-                return;
-            }
-
-            var currentHand = _gameManager.GetCurrentPlayerHand();
+            var currentHand = _gameManager.Players[_gameManager.CurrentPlayerIdx].Hand;
             Draw(currentHand);
+        }
+        protected override void OnLayout(LayoutEventArgs e)
+        {
+            base.OnLayout(e);
+
+            if (_cardViews == null || !_cardViews.Any())
+                return;
+
+            int spacing = 45;
+            int cardWidth = _cardViews[0].Width;
+            int totalWidth = ((_cardViews.Count - 1) * spacing) + cardWidth;
+            int startX = (this.ClientSize.Width - totalWidth) / 2;
+
+            for (int i = 0; i < _cardViews.Count; i++)
+            {
+                _cardViews[i].Left = startX + (i * spacing);
+            }
         }
     }
 }

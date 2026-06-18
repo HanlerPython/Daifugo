@@ -21,6 +21,9 @@ namespace test01.Controller
         public HandsEvaluator.Hands CurrentHands { get; set; }
         public bool IsReversed { get; set; } //是否為大革命狀態或J反
         public int CurrentPlayerIdx { get; set; }
+        public int LastPlayedPlayerIdx { get; set; }
+        public int FinishedPlayersCount { get; set; }  //脫出人數
+        public int PassCount { get; set; } = 0;
         public HandsEvaluator HandsEvaluator { get; }
         public GreedyAIStrategy Ai { get; }
 
@@ -29,6 +32,10 @@ namespace test01.Controller
         public event EventHandler OnPlayerHandChanged;
         //使外部改變牌桌狀態
         public event EventHandler OnDeskChanged;
+        //觸發輪到玩家時的前置作業
+        public event EventHandler OnPlayerTurnStarted;
+        //卡牌交換時改變場中文字
+        public event EventHandler OnCardExchanging;
 
         public GameManager()
         {
@@ -71,7 +78,13 @@ namespace test01.Controller
         }
         public IEnumerable<Card> UpdateRecommendations(IEnumerable<Card> selectedCards)
         {
-            return HandsEvaluator.Recommand(Players[CurrentPlayerIdx].Hand, selectedCards, CurrentPlay, CurrentHands, false);
+            //非遊玩階段(例如換牌階段)不會推薦牌型
+            if (!(_currentState is PlayerTurnState))
+            {
+                return null;
+            }
+
+            return HandsEvaluator.Recommand(Players[CurrentPlayerIdx].Hand, selectedCards, CurrentPlay, CurrentHands, IsReversed);
         }
         public void NotifyPlayerHandChanged()
         {
@@ -80,6 +93,14 @@ namespace test01.Controller
         public void NotifyDeskChanged()
         {
             OnDeskChanged?.Invoke(this, EventArgs.Empty);
+        }
+        public void NotifyPlayerTurnStarted()
+        {
+            OnPlayerTurnStarted?.Invoke(this, EventArgs.Empty);
+        }
+        public void NotifyCardExchanging()
+        {
+            OnCardExchanging?.Invoke(this, EventArgs.Empty);
         }
 
         //由個別state實作

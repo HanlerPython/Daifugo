@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using test01.Controller;
 
 namespace test01.View.Playing
 {
@@ -14,6 +15,8 @@ namespace test01.View.Playing
     {
         public HandView Hand => this._hand;
         public DeskView Desk => this._deskView;
+        private GameManager _gameManager;
+
         public event Action OnPassRequested;
         public PlayingControl()
         {
@@ -29,6 +32,12 @@ namespace test01.View.Playing
             this._passBtn.Click += PassBtn_Click;
         }
 
+        public void Initialize(GameManager gameManager)
+        {
+            _gameManager = gameManager;
+            this._hand.Initialize(gameManager);
+            this._deskView.Initialize(gameManager);
+        }
         private void BindBackgroundClick(Control parent)
         {
             //點擊非按鈕或是卡牌都會取消選取
@@ -49,6 +58,10 @@ namespace test01.View.Playing
         }
         private void PassBtn_Click(object sender, EventArgs e)
         {
+            //非自己回合Pass不會觸發
+            if (_gameManager.CurrentPlayerIdx != 0)
+                return;
+
             //對外廣播pass觸發事件
             OnPassRequested?.Invoke();
         }

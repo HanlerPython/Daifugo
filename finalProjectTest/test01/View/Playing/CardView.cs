@@ -35,8 +35,6 @@ namespace test01.View.Playing
             this.MouseLeave += CardView_MouseLeave;
             this.Click += CardView_Click;
             this.DoubleClick += CardView_Click; //避免點擊過快時無法觸發一般Click
-
-            UpdateImage();
         }
         public void UpdateImage()
         {

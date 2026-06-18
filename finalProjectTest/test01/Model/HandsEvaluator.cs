@@ -112,54 +112,44 @@ namespace test01.Model
                             matchingCards.AddRange(play);
                         }
                     }
-                    else //場上是同花順
+                    else//場上是同花順
                     {
-                        Card.Suit currentSuit = currentPlay.First().SuitType;
-                        List <Card> validHand = playerHand
-                            //留下同花色
-                            .Where(c => c.SuitType == currentSuit)
-                            //以權重比較，並考慮是否反轉
-                            .Where(c => c.Weight * (isReversed ? -1 : 1) > currentWeight)
-                            .ToList();
+                        //所有非鬼牌花色
+                        var allSuits = new[] { Card.Suit.SPADES, Card.Suit.HEARTS, Card.Suit.DIAMONDS, Card.Suit.CLUBS };
 
-                        //加上鬼牌至少要與場上牌型張數相當
-                        int leftCardsCnt = validHand.Count() + handJokerCount;
-                        if (leftCardsCnt < currentCount)
-                        {
-                            matchingCards.Clear();
-                            return matchingCards;
-                        }
+                        //同花順中的最小與最大權重邊界
+                        int ABSOLUTE_MIN_WEIGHT = 0;
+                        int ABSOLUTE_MAX_WEIGHT = 12;
 
-                        List<Card> validPlay = new List<Card>();
-                        int indexLimit = validHand.Count() + handJokerCount - currentCount;
-                        for (int i = 0; i <= indexLimit; i++)
+                        foreach (var suit in allSuits)
                         {
-                            validPlay.Add(validHand[i]);
-                            int usedJoker = 0;
-                            //validPlay.Count() + usedJoker即為目前已收集張數
-                            for (int k = i + 1; k < validHand.Count() && validPlay.Count() + usedJoker < currentCount; k++)
+                            //取得該花色的牌
+                            var sameSuitHand = playerHand.Where(c => c.SuitType == suit).ToList();
+
+                            //如果加上鬼牌張數都不夠，直接略過
+                            if (sameSuitHand.Count + handJokerCount < currentCount)
+                                continue;
+
+                            //測試每一個可能的順子起點
+                            for (int startWeight = ABSOLUTE_MIN_WEIGHT; startWeight <= ABSOLUTE_MAX_WEIGHT - currentCount + 1; startWeight++)
                             {
-                                //有多少空隙
-                                int gap = validHand[k].Weight - validHand[k - 1].Weight - 1;
-                                if (gap != 0)
+                                int endWeight = startWeight + currentCount - 1;
+
+                                //計算這個順子的最終點數是否大於場上
+                                int evaluatedWeight = isReversed ? (endWeight * -1) : startWeight;
+                                if (evaluatedWeight <= currentWeight)
+                                    continue;
+
+                                //計算玩家手牌在這個權重區間內有幾張牌
+                                var cardsInWindow = sameSuitHand.Where(c => c.Weight >= startWeight && c.Weight <= endWeight).ToList();
+                                int neededJokers = currentCount - cardsInWindow.Count;
+
+                                //如果手上的鬼牌足夠填補這個區間的空缺，則這些實體牌都可以被推薦
+                                if (neededJokers <= handJokerCount)
                                 {
-                                    if ((handJokerCount - usedJoker) >= gap)
-                                    {
-                                        usedJoker++; //用joker代替間隔
-                                        if (validPlay.Count() + usedJoker == currentCount)
-                                            break;
-                                    }
-                                    else
-                                        break;
+                                    matchingCards.AddRange(cardsInWindow);
                                 }
-
-                                validPlay.Add(validHand[k]);
                             }
-
-                            if (validPlay.Count() + handJokerCount >= currentCount)
-                                matchingCards.AddRange(validPlay);
-
-                            validPlay.Clear();
                         }
                     }
 
@@ -202,22 +192,7 @@ namespace test01.Model
             Hands playHands = HandsType(cardsToPlay);
             //該玩家為新出牌者
             if (currentPlay == null)
-            {
-                //遇到Both時確認牌型
-                if(playHands == Hands.Both)
-                {
-                    if (playHands == HandsEvaluator.Hands.Both)
-                    {
-                        var ressult = MessageBox.Show("這是同花順嗎?", "選擇牌型", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (ressult == DialogResult.Yes)
-                            playHands = HandsEvaluator.Hands.Flush;
-                        else
-                            playHands = HandsEvaluator.Hands.SameRank;
-                    }
-                }
-
-                return playHands; //回傳有效牌型或illegal
-            }
+                return playHands; //直接回傳
 
             //場面已有牌
             //張數不同

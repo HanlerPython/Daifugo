@@ -128,7 +128,6 @@ C:\Users\user\Desktop\output1\finalProjectTest\test01\obj\Debug\test01.csproj.Co
 C:\Users\user\Desktop\output1\finalProjectTest\test01\obj\Debug\test01.exe
 C:\Users\user\Desktop\output1\finalProjectTest\test01\obj\Debug\test01.pdb
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.MainForm.resources
-C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.View.UserControls.PlayingControl.resources
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\bin\Debug\Assets\img\card_back.png
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\bin\Debug\Assets\img\CLUBS_ACE.png
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\bin\Debug\Assets\img\CLUBS_EIGHT.png
@@ -195,3 +194,4 @@ C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\obj\Debug\test0
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\obj\Debug\test01.exe
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\obj\Debug\test01.pdb
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\obj\Debug\test01.View.Playing.PlayingControl.resources
+C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.View.Playing.PlayingControl.resources

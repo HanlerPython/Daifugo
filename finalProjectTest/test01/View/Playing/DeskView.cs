@@ -10,8 +10,8 @@ namespace test01.View.Playing
 {
     public partial class DeskView : UserControl
     {
-        private Label _infoLabel; // 顯示：「玩家 [張三] 打出：」
-        private List<PictureBox> _displayedCards; // 顯示打出的卡牌圖片
+        private readonly Label _infoLabel; // 顯示：「玩家 [張三] 打出：」
+        private readonly List<PictureBox> _displayedCards; // 顯示打出的卡牌圖片
         private GameManager _gameManager;
 
         public DeskView()
@@ -36,15 +36,14 @@ namespace test01.View.Playing
         {
             _gameManager = gameManager;
             _gameManager.OnDeskChanged += HandleDeskChanged;
+            _gameManager.OnCardExchanging += HandleCardExchanging;
         }
-
-        // 由外部 State 或 Controller 呼叫更新
         public void HandleDeskChanged(object sender, EventArgs e)
         {
             string playerName = _gameManager.Players[_gameManager.CurrentPlayerIdx].Name;
             IEnumerable<Card> playedCards = _gameManager.CurrentPlay;
 
-            // 清理舊卡牌圖片
+            //清理舊卡牌圖片
             foreach (var pb in _displayedCards)
             {
                 this.Controls.Remove(pb);
@@ -54,16 +53,19 @@ namespace test01.View.Playing
 
             if (playedCards == null || !playedCards.Any())
             {
-                _infoLabel.Text = "目前牌桌上沒有牌";
+                _infoLabel.Text = $"當前玩家: {playerName}\r\n目前牌桌上沒有牌";
                 return;
             }
 
-            _infoLabel.Text = $"最新出牌玩家: {playerName}";
+            _infoLabel.Text = $"當前玩家: {playerName}";
 
             // 動態生成並排列打出的卡牌（位置計算邏輯可封裝在 OnLayout 或在此直接計算）
-            int startX = 50;
-            int y = 60;
-            int spacing = 30; // 出牌展示通常重疊度較高
+            int y = 69;
+            int spacing = 30;//重疊在一起
+            int cardWidth = 60;
+            int totalWidth = ((_displayedCards.Count - 1) * spacing) + cardWidth;
+            int startX = (this.ClientSize.Width - totalWidth) / 2;
+            
 
             foreach (var card in playedCards)
             {
@@ -79,9 +81,14 @@ namespace test01.View.Playing
 
                 _displayedCards.Add(cardImg);
                 this.Controls.Add(cardImg);
+                cardImg.BringToFront();
 
                 startX += spacing;
             }
+        }
+        public void HandleCardExchanging(object sender, EventArgs e)
+        {
+            _infoLabel.Text = "請進行卡牌交換";
         }
     }
 }

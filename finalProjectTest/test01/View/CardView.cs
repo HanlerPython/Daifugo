@@ -22,7 +22,14 @@ namespace test01.View
             this.IsSelected = false;
             this._isHovering = false;
             this.Card = card;
-            SizeMode = PictureBoxSizeMode.AutoSize;
+
+            UpdateImage();
+            if (this.Image != null)
+            {
+                this.Width = this.Image.Width;
+                this.Height = this.Image.Height;
+                this.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
 
             this.MouseEnter += CardView_MouseEnter;
             this.MouseLeave += CardView_MouseLeave;

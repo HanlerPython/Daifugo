@@ -14,8 +14,8 @@ namespace test01.View.Playing
 {
     public partial class HandView : UserControl
     {
-        private GameManager _gameManager;
         private readonly List<CardView> _cardViews;
+        private GameManager _gameManager;
 
         public HandView()
         {
@@ -27,6 +27,7 @@ namespace test01.View.Playing
         {
             _gameManager = gameManager;
             _gameManager.OnPlayerHandChanged += HandleHandChanged;
+            _gameManager.OnPlayerTurnStarted += HandlePlayerTurnStarted;
         }
         public void Draw(IEnumerable<Card> hand)
         {
@@ -68,6 +69,10 @@ namespace test01.View.Playing
         }
         private void HandleSelectionChanged(object sender, EventArgs e)
         {
+            //非自己回合不推薦牌型
+            if (_gameManager.CurrentPlayerIdx != 0)
+                return;
+
             List<Card> selectedCards = new List<Card>();
             foreach (Control control in this.Controls)
             {
@@ -77,9 +82,57 @@ namespace test01.View.Playing
                 }
             }
 
+            UpdateRecommendations(selectedCards);
+        }
+        private void HandleCardPlayed(object sender, EventArgs e)
+        {
+            //非自己回合無法出牌
+            if(_gameManager.CurrentPlayerIdx != 0)
+            {
+                Unselect(); //提示出牌失敗
+                return;
+            }
+
+            List<Card> cards = new List<Card>();
+
+            foreach (Control control in this.Controls)
+            {
+                if (control is CardView cardView && cardView.IsSelected)
+                {
+                    cards.Add(cardView.Card);
+                }
+            }
+
+            if (cards.Any())
+            {
+                if (!_gameManager.TryPlayCard(cards))
+                {
+                    Unselect();
+                    return;
+                }
+                else
+                    //更新當前玩家手牌
+                    Invoke(new Action(() => HandleHandChanged(sender, e)));
+            }
+        }
+        private void HandleHandChanged(object sender, EventArgs e)
+        {
+            var currentHand = _gameManager.Players[0].Hand;
+            Draw(currentHand);
+        }
+        private void HandlePlayerTurnStarted(object sender, EventArgs e)
+        {
+            Unselect();
+            //主動觸發推薦手牌
+            List<Card> cards = new List<Card>();
+            UpdateRecommendations(cards);
+        }
+        private void UpdateRecommendations(IEnumerable<Card> selectedCards)
+        {
             List<Card> recommendedCards = (List<Card>)_gameManager.UpdateRecommendations(selectedCards);
             //所有牌都能打
-            if (recommendedCards == null){
+            if (recommendedCards == null)
+            {
                 foreach (Control control in this.Controls)
                 {
                     if (control is CardView cardView)
@@ -97,32 +150,6 @@ namespace test01.View.Playing
                     cardView.Enabled = recommendedCards.Contains(cardView.Card);
                 }
             }
-        }
-        private void HandleCardPlayed(object sender, EventArgs e)
-        {
-            List<Card> cards = new List<Card>();
-
-            foreach (Control control in this.Controls)
-            {
-                if (control is CardView cardView && cardView.IsSelected)
-                {
-                    cards.Add(cardView.Card);
-                }
-            }
-
-            if (cards.Any())
-            {
-                if (!_gameManager.TryPlayCard(cards))
-                    MessageBox.Show("牌型不合法!", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                else
-                    //更新當前玩家手牌
-                    Invoke(new Action(() => HandleHandChanged(sender, e)));
-            }
-        }
-        private void HandleHandChanged(object sender, EventArgs e)
-        {
-            var currentHand = _gameManager.Players[_gameManager.CurrentPlayerIdx].Hand;
-            Draw(currentHand);
         }
         protected override void OnLayout(LayoutEventArgs e)
         {
