@@ -16,13 +16,19 @@ namespace test01.Controller
         private IGameState _currentState;
         private readonly List<Player> _players;
         public IReadOnlyList<Player> Players => _players.AsReadOnly();
+        public List<Player> Winners { get; set; } = new List<Player>();
+        public List<Player> Losers { get; set; } = new List<Player>();
         public Deck Deck { get; private set; }
+        public List<Card> DiscardPile { get; set; } = new List<Card>();
         public List<Card> CurrentPlay { get; set; }
+        public List<Card> LastPlay { get; set; }
         public HandsEvaluator.Hands CurrentHands { get; set; }
-        public bool IsReversed { get; set; } //是否為大革命狀態或J反
+        public bool Reversed { get; set; } //是否為大革命狀態
+        public bool IsTemporaryReversed { get; set; } //J反一回合後重新歸正
+        public bool IsReversed => Reversed ^ IsTemporaryReversed; //當前反轉狀態
+        public bool IsSuitLocked { get; set; } //是否鎖花色
         public int CurrentPlayerIdx { get; set; }
         public int LastPlayedPlayerIdx { get; set; }
-        public int FinishedPlayersCount { get; set; }  //脫出人數
         public int PassCount { get; set; } = 0;
         public HandsEvaluator HandsEvaluator { get; }
         public GreedyAIStrategy Ai { get; }
@@ -84,7 +90,40 @@ namespace test01.Controller
                 return null;
             }
 
-            return HandsEvaluator.Recommand(Players[CurrentPlayerIdx].Hand, selectedCards, CurrentPlay, CurrentHands, IsReversed);
+            return HandsEvaluator.Recommand(Players[CurrentPlayerIdx].Hand, selectedCards, CurrentPlay, CurrentHands, IsReversed, IsSuitLocked);
+        }
+        public bool CheckFinished()
+        {
+            Player currentPlayer = Players[CurrentPlayerIdx];
+            if (currentPlayer.StateType == Player.State.Finished)
+            {
+                bool punish = false;
+                if (CurrentHands == HandsEvaluator.Hands.SameRank)
+                {
+                    Card firstCard = CurrentPlay.First();
+                    if(firstCard.SuitType == Card.Suit.JOKER
+                        || (!Reversed && firstCard.RankType == Card.Rank.TWO)
+                        || (Reversed && firstCard.RankType == Card.Rank.THREE))
+                    {
+                        punish = true;
+                    }
+                }
+                if (punish)
+                    Losers.Add(currentPlayer);
+                else
+                    Winners.Add(currentPlayer);
+
+                if (Winners.Count + Losers.Count == 3)
+                {
+                    Losers.Add(Players[GetNextPlayerIdx()]);
+                    ChangeState(new RoundEndState());
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            return false;
         }
         public void NotifyPlayerHandChanged()
         {
@@ -106,6 +145,5 @@ namespace test01.Controller
         //由個別state實作
         public bool TryPlayCard(IEnumerable<Card> cards) => _currentState.PlayCard(this, cards);
         public bool TryPass() => _currentState.Pass(this);
-        public bool TrySubmitSpecialAction(IEnumerable<Card> cards) => _currentState.SubmitSpecialAction(this, cards);
     }
 }

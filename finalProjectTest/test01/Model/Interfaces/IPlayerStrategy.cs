@@ -163,7 +163,7 @@ namespace test01.Model.Interfaces
         public IEnumerable<Card> DecideDiscard(GameSnapshot context, IEnumerable<Card> hand, int count)
         {
             // 捨棄邏輯：利用剛寫好的 GetHeuristicScore 找出價值最低的 N 張牌捨棄
-            return hand.OrderBy(card => GetHeuristicScore(card, context.IsReversed)).Take(count);
+            return hand.OrderBy(card => GetHeuristicScore(card, context.IsReversed)).Take(count).ToList();
         }
     }
 }

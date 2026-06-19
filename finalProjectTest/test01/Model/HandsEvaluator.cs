@@ -21,7 +21,7 @@ namespace test01.Model
         }
 
         //回傳不需要被改為灰階的牌
-        public IEnumerable<Card> Recommand(IEnumerable<Card> hand, IEnumerable<Card> selectedCards, IEnumerable<Card> currentPlay, Hands currentHands, bool isReversed)
+        public IEnumerable<Card> Recommand(IEnumerable<Card> hand, IEnumerable<Card> selectedCards, IEnumerable<Card> currentPlay, Hands currentHands, bool isReversed, bool isSuitLocked)
         {
             List<Card> matchingCards = new List<Card>();
             List<Card> playerHand = hand.ToList();
@@ -99,6 +99,8 @@ namespace test01.Model
                         var validPlays = playerHand
                             //比較權重，並考慮是否反轉
                             .Where(c => c.Weight * (isReversed ? -1 : 1) > currentWeight)
+                            //若鎖花色則只留同花色
+                            .Where(c => !isSuitLocked || currentCount != 1 || c.SuitType == Card.Suit.JOKER || c.SuitType == currentPlay.First().SuitType)
                             //以權重分組
                             .GroupBy(c => c.Weight)
                             //該組合張數加上鬼牌數量應大於場上牌型數量
@@ -187,7 +189,7 @@ namespace test01.Model
 
             return matchingCards;
         }
-        public Hands Evaluate(IEnumerable<Card> cardsToPlay, IEnumerable<Card> currentPlay, bool isReversed, Hands currentHands)
+        public Hands Evaluate(IEnumerable<Card> cardsToPlay, IEnumerable<Card> currentPlay, Hands currentHands, bool isReversed, bool isSuitLocked)
         {
             Hands playHands = HandsType(cardsToPlay);
             //該玩家為新出牌者
@@ -205,6 +207,31 @@ namespace test01.Model
             //牌型不同
             if (playHands != currentHands)
                 return Hands.Illegal;
+
+            //黑桃三單吃鬼牌
+            if (currentPlay.Count() == 1)
+            {
+                var currentCard = currentPlay.First();
+                var playCard = cardsToPlay.First();
+                if (currentCard.SuitType == Card.Suit.JOKER &&
+                    playCard.SuitType == Card.Suit.SPADES && playCard.RankType == Card.Rank.THREE)
+                {
+                    return Hands.SameRank; //視為合法打出
+                }
+            }
+
+            /*
+            //單張鎖花色
+            if (isSuitLocked && currentPlay.Count() == 1)
+            {
+                var playCard = cardsToPlay.First();
+                var requiredSuit = currentPlay.First().SuitType;
+
+                //鬼牌可以無視鎖定打出，否則花色必須一致
+                if (playCard.SuitType != Card.Suit.JOKER && playCard.SuitType != requiredSuit)
+                    return Hands.Illegal;
+            }
+            */
 
             //點數大小沒贏
             if (GetHandsWeight(currentHands, currentPlay, isReversed) >= GetHandsWeight(playHands, cardsToPlay, isReversed))

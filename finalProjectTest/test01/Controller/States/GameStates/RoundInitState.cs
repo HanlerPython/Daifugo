@@ -16,13 +16,17 @@ namespace test01.Controller.States.GameStates
 
         public void Enter(GameManager gm)
         {
+            gm.Winners.Clear();
+            gm.Losers.Clear();
+            gm.DiscardPile.Clear();
             gm.CurrentPlay = null;
+            gm.LastPlay = null;
             gm.CurrentHands = HandsEvaluator.Hands.Null;
             gm.NotifyDeskChanged();
-            gm.IsReversed = false;
+            gm.Reversed = false;
+            gm.IsTemporaryReversed = false;
             gm.CurrentPlayerIdx = -1;
             gm.LastPlayedPlayerIdx = -1;
-            gm.FinishedPlayersCount = 0;
             gm.PassCount = 0;
 
             //給起始玩家和其下家最多牌
@@ -112,7 +116,6 @@ namespace test01.Controller.States.GameStates
             return true;
         }
         public bool Pass(GameManager gm) => false;
-        public bool SubmitSpecialAction(GameManager gm, IEnumerable<Card> cards) => false;
         private void RoundStart(GameManager gm)
         {
             //從手上有方塊三的人開始

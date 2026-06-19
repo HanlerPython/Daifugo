@@ -54,7 +54,7 @@
     <Compile Include="Controller\States\GameStates\PlayerTurnState.cs" />
     <Compile Include="Controller\States\GameStates\RoundEndState.cs" />
     <Compile Include="Controller\States\GameStates\RoundInitState.cs" />
-    <Compile Include="Controller\States\GameStates\WaitingDiscardState.cs" />
+    <Compile Include="Controller\States\GameStates\SpecialActionState.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

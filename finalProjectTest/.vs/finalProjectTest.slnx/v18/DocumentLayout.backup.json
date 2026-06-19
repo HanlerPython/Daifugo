@@ -7,60 +7,60 @@
       "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\gamestates\\roundendstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\states\\gamestates\\playerturnstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\gamestates\\playerturnstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|c:\\users\\user\\desktop\\c#\\finalproject\\finalprojecttest\\test01\\controller\\states\\gamestates\\roundinitstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\gamestates\\roundinitstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\model\\handsevaluator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\model\\handsevaluator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|c:\\users\\user\\desktop\\c#\\finalproject\\finalprojecttest\\test01\\controller\\states\\gamestates\\specialactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\gamestates\\specialactionstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|c:\\users\\user\\desktop\\c#\\finalproject\\finalprojecttest\\test01\\controller\\states\\gamestates\\playerturnstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\gamestates\\playerturnstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\view\\playing\\handview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\view\\playing\\handview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\view\\playing\\deskview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\view\\playing\\deskview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\states\\appstates\\playingstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\appstates\\playingstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\model\\interfaces\\iplayerstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\model\\interfaces\\iplayerstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\states\\gamestates\\roundinitstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\gamestates\\roundinitstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\model\\handsevaluator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\model\\handsevaluator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\view\\playing\\playingcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\view\\playing\\playingcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|c:\\users\\user\\desktop\\c#\\finalproject\\finalprojecttest\\test01\\view\\playing\\playingcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\view\\playing\\playingcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\view\\playing\\deskview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\view\\playing\\deskview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\view\\playing\\handview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\view\\playing\\handview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\model\\interfaces\\iplayerstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\model\\interfaces\\iplayerstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\model\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\model\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\states\\appstates\\appmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\appstates\\appmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\view\\playing\\playingcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\view\\playing\\playingcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\states\\gamestates\\waitingdiscardstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\gamestates\\waitingdiscardstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\states\\appstates\\playingstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\appstates\\playingstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\controller\\states\\appstates\\appmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83BFC031-ABE3-48C1-A5C6-B84EC5005F68}|test01\\test01.csproj|solutionrelative:test01\\controller\\states\\appstates\\appmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -70,7 +70,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -78,15 +78,41 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "RoundInitState.cs",
-              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\RoundInitState.cs",
-              "RelativeDocumentMoniker": "test01\\Controller\\States\\GameStates\\RoundInitState.cs",
-              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\RoundInitState.cs",
-              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\RoundInitState.cs",
-              "ViewState": "AgIAAEwAAAAAAAAAAAA1wE0AAAAdAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "DeskView.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\DeskView.cs",
+              "RelativeDocumentMoniker": "test01\\View\\Playing\\DeskView.cs",
+              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\DeskView.cs",
+              "RelativeToolTip": "test01\\View\\Playing\\DeskView.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAxwFMAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-16T15:16:53.15Z",
+              "WhenOpened": "2026-06-17T16:27:04.566Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SpecialActionState.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\SpecialActionState.cs",
+              "RelativeDocumentMoniker": "test01\\Controller\\States\\GameStates\\SpecialActionState.cs",
+              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\SpecialActionState.cs",
+              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\SpecialActionState.cs",
+              "ViewState": "AgIAAKoAAAAAAAAAAAAYwGwAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-19T11:35:45.535Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PlayerTurnState.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
+              "RelativeDocumentMoniker": "test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
+              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
+              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAAAEQAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-19T10:24:10.854Z",
               "EditorCaption": ""
             },
             {
@@ -95,55 +121,55 @@
               "Title": "RoundEndState.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\RoundEndState.cs",
               "RelativeDocumentMoniker": "test01\\Controller\\States\\GameStates\\RoundEndState.cs",
-              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\RoundEndState.cs*",
-              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\RoundEndState.cs*",
-              "ViewState": "AgIAABkAAAAAAAAAAAA1wCQAAAAhAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\RoundEndState.cs",
+              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\RoundEndState.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAqwBcAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-18T15:34:16.84Z",
+              "WhenOpened": "2026-06-19T11:02:18.716Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "PlayerTurnState.cs",
-              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
-              "RelativeDocumentMoniker": "test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
-              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
-              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\PlayerTurnState.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAAArwHgAAAAJAAAAAAAAAA==",
+              "Title": "RoundInitState.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\RoundInitState.cs",
+              "RelativeDocumentMoniker": "test01\\Controller\\States\\GameStates\\RoundInitState.cs",
+              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\RoundInitState.cs",
+              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\RoundInitState.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAA1wCkAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-16T15:35:39.597Z",
+              "WhenOpened": "2026-06-19T10:24:12.369Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\GameManager.cs",
+              "RelativeDocumentMoniker": "test01\\Controller\\GameManager.cs",
+              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\GameManager.cs",
+              "RelativeToolTip": "test01\\Controller\\GameManager.cs",
+              "ViewState": "AgIAAGQAAAAAAAAAAAAMwHMAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-16T14:56:39.335Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "HandView.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\HandView.cs",
               "RelativeDocumentMoniker": "test01\\View\\Playing\\HandView.cs",
               "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\HandView.cs",
               "RelativeToolTip": "test01\\View\\Playing\\HandView.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAlwHAAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAIA5wBYAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-17T18:09:57.503Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "DeskView.cs",
-              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\DeskView.cs",
-              "RelativeDocumentMoniker": "test01\\View\\Playing\\DeskView.cs",
-              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\DeskView.cs",
-              "RelativeToolTip": "test01\\View\\Playing\\DeskView.cs",
-              "ViewState": "AgIAAFUAAAAAAAAAAAAowEwAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-17T16:27:04.566Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "PlayingControl.cs [\u8A2D\u8A08]",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\PlayingControl.cs",
               "RelativeDocumentMoniker": "test01\\View\\Playing\\PlayingControl.cs",
@@ -155,7 +181,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 6,
               "Title": "PlayingControl.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\View\\Playing\\PlayingControl.cs",
               "RelativeDocumentMoniker": "test01\\View\\Playing\\PlayingControl.cs",
@@ -168,59 +194,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "PlayingState.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\AppStates\\PlayingState.cs",
               "RelativeDocumentMoniker": "test01\\Controller\\States\\AppStates\\PlayingState.cs",
               "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\AppStates\\PlayingState.cs",
               "RelativeToolTip": "test01\\Controller\\States\\AppStates\\PlayingState.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAA3wBkAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwBkAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-17T15:49:23.433Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "IPlayerStrategy.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Model\\Interfaces\\IPlayerStrategy.cs",
               "RelativeDocumentMoniker": "test01\\Model\\Interfaces\\IPlayerStrategy.cs",
               "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Model\\Interfaces\\IPlayerStrategy.cs",
               "RelativeToolTip": "test01\\Model\\Interfaces\\IPlayerStrategy.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAAAB4AAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAIBAwCoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-17T13:49:08.993Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "GameManager.cs",
-              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\GameManager.cs",
-              "RelativeDocumentMoniker": "test01\\Controller\\GameManager.cs",
-              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\GameManager.cs",
-              "RelativeToolTip": "test01\\Controller\\GameManager.cs",
-              "ViewState": "AgIAAFwAAAAAAAAAAAA7wGUAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-16T14:56:39.335Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "HandsEvaluator.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Model\\HandsEvaluator.cs",
               "RelativeDocumentMoniker": "test01\\Model\\HandsEvaluator.cs",
               "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Model\\HandsEvaluator.cs",
               "RelativeToolTip": "test01\\Model\\HandsEvaluator.cs",
-              "ViewState": "AgIAALkAAAAAAAAAAAAuwMIAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAANsAAAAAAAAAAAA2wOMAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-16T15:03:48.633Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "MainForm.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\MainForm.cs",
               "RelativeDocumentMoniker": "test01\\MainForm.cs",
@@ -228,12 +241,11 @@
               "RelativeToolTip": "test01\\MainForm.cs",
               "ViewState": "AgIAACkAAAAAAAAAAIAxwDAAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-13T07:14:07.677Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-13T07:14:07.677Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "AppManager.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\AppStates\\AppManager.cs",
               "RelativeDocumentMoniker": "test01\\Controller\\States\\AppStates\\AppManager.cs",
@@ -241,31 +253,17 @@
               "RelativeToolTip": "test01\\Controller\\States\\AppStates\\AppManager.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAhwBoAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-16T09:29:03.332Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-16T09:29:03.332Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "WaitingDiscardState.cs",
-              "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\WaitingDiscardState.cs",
-              "RelativeDocumentMoniker": "test01\\Controller\\States\\GameStates\\WaitingDiscardState.cs",
-              "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Controller\\States\\GameStates\\WaitingDiscardState.cs",
-              "RelativeToolTip": "test01\\Controller\\States\\GameStates\\WaitingDiscardState.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAwwAkAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-16T15:46:34.965Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 10,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Model\\Player.cs",
               "RelativeDocumentMoniker": "test01\\Model\\Player.cs",
               "ToolTip": "C:\\Users\\user\\Desktop\\C#\\finalProject\\finalProjectTest\\test01\\Model\\Player.cs",
               "RelativeToolTip": "test01\\Model\\Player.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAA2wEYAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAqwEgAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-16T15:10:33.417Z",
               "EditorCaption": ""

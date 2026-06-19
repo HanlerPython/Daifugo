@@ -13,15 +13,18 @@ namespace test01.Controller.States.GameStates
         public async void Enter(GameManager gm)
         {
             //結算與排序名次
-            var rankedPlayers = gm.Players.OrderBy(p => p.Rank).ToList();
+            var finalRanking = new List<Player>();
+            finalRanking.AddRange(gm.Winners);
+            finalRanking.AddRange(gm.Losers.AsEnumerable().Reverse().ToList());
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("本局結算名次：\n");
             string[] rankTitles = { "大富豪", "富豪", "貧民", "大貧民" };
-            for (int i = 0; i < rankedPlayers.Count; i++)
+            for (int i = 0; i < finalRanking.Count; i++)
             {
+                finalRanking[i].Rank = i + 1;
                 string title = (i < rankTitles.Length) ? rankTitles[i] : $"第{i + 1}名";
-                string name = rankedPlayers[i].Name;
-                string playerName = rankedPlayers[i].Id == 0 ? $"{name} (你)" : $"{name} (人機)";
+                string name = finalRanking[i].Name;
+                string playerName = finalRanking[i].Id == 0 ? $"{name} (你)" : $"{name} (人機)";
                 sb.AppendLine($"{title} : {playerName}");
             }
             MessageBox.Show(sb.ToString(), "回合結束", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -42,7 +45,5 @@ namespace test01.Controller.States.GameStates
         public bool PlayCard(GameManager gm, IEnumerable<Card> cards) => false;
 
         public bool Pass(GameManager gm) => false;
-
-        public bool SubmitSpecialAction(GameManager gm, IEnumerable<Card> cards) => false;
     }
 }

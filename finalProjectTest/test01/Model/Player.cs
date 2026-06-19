@@ -60,7 +60,8 @@ namespace test01.Model
             return Hand.Where(c => c.SuitType != Card.Suit.JOKER)
                        .OrderByDescending(c => c.Weight)
                        .ThenByDescending(c => c.SuitType)
-                       .Take(count);
+                       .Take(count)
+                       .ToList();
         }
 
         public IEnumerable<Card> GetLowestCards(int count)
@@ -68,7 +69,8 @@ namespace test01.Model
             //依權重與花色升序取前N張
             return Hand.OrderBy(c => c.Weight)
                        .ThenBy(c => c.SuitType)
-                       .Take(count);
+                       .Take(count)
+                       .ToList();
         }
         private void SortHand()
         {

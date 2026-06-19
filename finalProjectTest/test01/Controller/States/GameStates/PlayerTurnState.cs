@@ -18,7 +18,7 @@ namespace test01.Controller.States.GameStates
             gm.NotifyDeskChanged();
             if (gm.CurrentPlayerIdx != 0) //人機
             {
-                await Task.Delay(1000); //模擬思考時間
+                await Task.Delay(500); //模擬思考時間
                 var currentAi = gm.Players[gm.CurrentPlayerIdx];
                 GameSnapshot gs = new GameSnapshot(gm);
                 var cardsToPlay = gm.Ai.DecidePlay(gs, currentAi.Hand);
@@ -33,12 +33,11 @@ namespace test01.Controller.States.GameStates
 
         public bool PlayCard(GameManager gm, IEnumerable<Card> cards)
         {
-
             List<Card> sortedPlay = cards
                 .OrderBy(c => c.RankType)
                 .ThenBy(c => c.SuitType)
                 .ToList();
-            var playHands = gm.HandsEvaluator.Evaluate(sortedPlay, gm.CurrentPlay, gm.IsReversed, gm.CurrentHands);
+            var playHands = gm.HandsEvaluator.Evaluate(sortedPlay, gm.CurrentPlay, gm.CurrentHands, gm.IsReversed,  gm.IsSuitLocked);
             if (playHands == Hands.Illegal)
                 return false;
             else if(playHands == Hands.Both)
@@ -52,53 +51,29 @@ namespace test01.Controller.States.GameStates
                         playHands = Hands.SameRank;
                 }
                 else //人機
-                    playHands = Hands.Flush; //暫時默認為同花順
+                    playHands = Hands.Flush; //默認為同花順
             }
 
             gm.PassCount = 0;
             int index = gm.CurrentPlayerIdx;
             var CurrentPlayer = gm.Players[index];
             gm.LastPlayedPlayerIdx = index;
-            gm.CurrentHands = playHands;
+            gm.DiscardPile.AddRange(sortedPlay);
             CurrentPlayer.RemoveCards(sortedPlay); //會檢查手牌張數觸發脫出
+            gm.CurrentHands = playHands;
+            gm.LastPlay = gm.CurrentPlay;
             gm.CurrentPlay = sortedPlay;
             gm.NotifyDeskChanged();
 
-            if (CurrentPlayer.StateType == Player.State.Finished)
-            {
-                gm.FinishedPlayersCount++;
-                CurrentPlayer.Rank = gm.FinishedPlayersCount;
-                if (gm.FinishedPlayersCount == 3)
-                {
-                    gm.Players[gm.GetNextPlayerIdx()].Rank = 4;
-                    gm.ChangeState(new RoundEndState());
-                    return true;
-                }
-            }
-
-            bool isDiscardEffect = false; // 替換為實際卡牌判斷
-            if (isDiscardEffect)
-            {
-                // 中斷一般輪轉，切換至等待捨棄狀態
-                //gm.ChangeState(new WaitingDiscardState(/* 傳遞需捨棄的張數 */));
-            }
-            else //一般出牌，輪轉下一位
-            {
-                NextPlayer(gm);
-            }
+            //若這輪還沒結束
+            if(!gm.CheckFinished())
+                gm.ChangeState(new SpecialActionState());
 
             return true;
         }
         public bool Pass(GameManager gm)
         {
             gm.PassCount++;
-            NextPlayer(gm);
-            return true;
-        }
-
-        public bool SubmitSpecialAction(GameManager gm, IEnumerable<Card> cards) => false;
-        private void NextPlayer(GameManager gm)
-        {
             int activePlayersCount = gm.Players.Count(p => p.StateType != Player.State.Finished);
             int index = gm.GetNextPlayerIdx();
             if (index != -1)
@@ -116,9 +91,13 @@ namespace test01.Controller.States.GameStates
             {
                 //基本不可能發生(所有人都是脫出狀態)
             }
+
+            return true;
         }
         private void NextTurn(GameManager gm)
         {
+            gm.IsTemporaryReversed = false;
+            gm.IsSuitLocked = false;
             gm.PassCount = 0;
             gm.LastPlayedPlayerIdx = -1;
             gm.CurrentPlay = null;
