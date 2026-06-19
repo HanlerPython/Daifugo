@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using test01.Controller;
 using test01.Model;
+using test01.Utils;
 
 namespace test01.View.Playing
 {
@@ -71,7 +72,7 @@ namespace test01.View.Playing
             {
                 PictureBox cardImg = new PictureBox
                 {
-                    Image = ResourceManager.getCardFaceImage(card.SuitType, card.RankType),
+                    Image = ResourceManager.GetCardFaceImage(card.SuitType, card.RankType),
                     SizeMode = PictureBoxSizeMode.StretchImage,
                     Location = new Point(startX, y)
                 };

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using test01.Model;
+using test01.Utils;
 
 namespace test01.View.Playing
 {
@@ -38,7 +39,7 @@ namespace test01.View.Playing
         }
         public void UpdateImage()
         {
-            this.Image = ResourceManager.getCardFaceImage(Card.SuitType, Card.RankType);
+            this.Image = ResourceManager.GetCardFaceImage(Card.SuitType, Card.RankType);
         }
         public void Unselect()
         {

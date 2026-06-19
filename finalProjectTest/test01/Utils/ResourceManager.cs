@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Media;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using test01.Model;
+using static test01.Model.Card;
+
+namespace test01.Utils
+{
+    public static class ResourceManager
+    {
+        private static readonly Dictionary<(Suit Suit, Rank Rank), Image> _cardFaceImages =
+            new Dictionary<(Suit, Rank), Image>();
+        private static Image _cardBackImage;
+        private static SoundPlayer _currentBgmPlayer;
+        private static readonly Dictionary<string, SoundPlayer> _bgm = new Dictionary<string, SoundPlayer>();
+
+        public static void Initialize()
+        {
+            string baseDir = Path.Combine(Application.StartupPath, "Assets/img");
+
+            //卡背
+            string backPath = Path.Combine(baseDir, "card_back.png");
+            if (File.Exists(backPath))
+            {
+                _cardBackImage = Image.FromFile(backPath);
+            }
+
+            //卡面(除了鬼牌)
+            foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+            {
+                if (suit == Suit.JOKER)
+                    continue;
+
+                foreach (Rank rank in Enum.GetValues(typeof(Rank)))
+                {
+                    if (rank == Rank.BLACK || rank == Rank.RED)
+                        continue;
+
+                    string key = $"{suit}_{rank}";
+                    string fullPath = Path.Combine(baseDir, $"{key}.png");
+                    if (File.Exists(fullPath))
+                    {
+                        _cardFaceImages[(suit, rank)] = Image.FromFile(fullPath);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine(fullPath + " loaded error");
+                    }
+                }
+            }
+
+            //大小王
+            string path = Path.Combine(baseDir, "JOKER_BLACK.png");
+            _cardFaceImages[(Suit.JOKER, Rank.BLACK)] = Image.FromFile(path);
+            path = Path.Combine(baseDir, "JOKER_RED.png");
+            _cardFaceImages[(Suit.JOKER, Rank.RED)] = Image.FromFile(path);
+
+            //音訊檔案
+            baseDir = Path.Combine(Application.StartupPath, "Assets/audio");
+            path = Path.Combine(baseDir, "bgm.wav");
+            _bgm["Playing"] = new SoundPlayer(path);
+            _bgm["Playing"].LoadAsync();
+        }
+        public static Image GetCardFaceImage(Suit suit, Rank rank)
+        {
+            if (_cardFaceImages.TryGetValue((suit, rank), out Image img))
+            {
+                return img;
+            }
+
+            return null;
+        }
+        public static Image GetCardBackImage()
+        {
+            return _cardBackImage;
+        }
+        public static void PlayBgm(string bgmKey)
+        {
+            _currentBgmPlayer = _bgm[bgmKey];
+            _currentBgmPlayer.PlayLooping();
+        }
+        public static void StopBgm()
+        {
+            _currentBgmPlayer?.Stop();
+        }
+    }
+}

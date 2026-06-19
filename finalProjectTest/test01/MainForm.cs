@@ -11,6 +11,7 @@ using test01.Model;
 using test01.View;
 using test01.Controller;
 using test01.Controller.States.AppStates;
+using test01.Utils;
 
 namespace test01
 {
@@ -39,13 +40,13 @@ namespace test01
         {
             this.ClientSize = new Size(WindowWidth, WindowHeight);
 
-            ResourceManager.initialize();
+            ResourceManager.Initialize();
+            ResourceManager.PlayBgm("Playing");
 
             //將容器託管給AppManager
             _appManager = new AppManager(_mainPanel);
             // 啟動狀態機。目前為開發測試階段，可直接進入 PlayingState
             // 未來完成主選單後，改為 _appManager.ChangeState(new StartMenuState());
-            //StartMenuState
             _appManager.ChangeState(new PlayingState());
         }
     }

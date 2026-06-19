@@ -389,8 +389,6 @@ namespace test01.Model
 
             //剩下可用於向外擴張的Joker數量
             int remainingJokers = handJokerCount - neededJokersForInternal;
-            if (remainingJokers == 0) //已經沒得擴張了
-                return matchingCards;
 
             //向左擴張
             int currentJokers = remainingJokers;
@@ -434,6 +432,10 @@ namespace test01.Model
                     rightIdx++;
                 }
             }
+
+            //同花順至少要三張
+            if (matchingCards.Count < 3)
+                matchingCards.Clear();
 
             //去除重複加入的元素並重新排序後回傳
             return matchingCards.Distinct().OrderBy(c => c.Weight).ToList();

@@ -195,3 +195,4 @@ C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\obj\Debug\test0
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\obj\Debug\test01.pdb
 C:\Users\user\Desktop\C#\PR\finalProject\finalProjectTest\test01\obj\Debug\test01.View.Playing.PlayingControl.resources
 C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\obj\Debug\test01.View.Playing.PlayingControl.resources
+C:\Users\user\Desktop\C#\finalProject\finalProjectTest\test01\bin\Debug\Assets\audio\bgm.wav
