@@ -220,7 +220,6 @@ namespace test01.Model
                 }
             }
 
-            /*
             //單張鎖花色
             if (isSuitLocked && currentPlay.Count() == 1)
             {
@@ -231,7 +230,6 @@ namespace test01.Model
                 if (playCard.SuitType != Card.Suit.JOKER && playCard.SuitType != requiredSuit)
                     return Hands.Illegal;
             }
-            */
 
             //點數大小沒贏
             if (GetHandsWeight(currentHands, currentPlay, isReversed) >= GetHandsWeight(playHands, cardsToPlay, isReversed))
@@ -434,7 +432,7 @@ namespace test01.Model
             }
 
             //同花順至少要三張
-            if (matchingCards.Count < 3)
+            if (matchingCards.Count + handJokerCount < 3)
                 matchingCards.Clear();
 
             //去除重複加入的元素並重新排序後回傳

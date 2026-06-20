@@ -42,7 +42,13 @@ namespace test01.Controller.States.GameStates
 
             //革命
             if (gm.CurrentPlay.Count >= 4)
+            {
                 gm.Reversed = !gm.Reversed;
+                if (gm.Reversed)
+                    gm.NotifyRevolutionStarted();
+                else
+                    gm.NotifyRevolutionEnded();
+            }
 
             //特殊牌效
             _skipCount = 0;
@@ -201,6 +207,7 @@ namespace test01.Controller.States.GameStates
                 gm.IsSuitLocked = false;
                 gm.PassCount = 0;
                 gm.LastPlayedPlayerIdx = -1;
+                gm.LastPlay = null;
                 gm.CurrentPlay = null;
                 gm.CurrentHands = Hands.Null;
                 gm.NotifyDeskChanged();
