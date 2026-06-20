@@ -14,7 +14,7 @@ namespace test01.Model.Interfaces
 
     public class GreedyAIStrategy : IPlayerStrategy
     {
-        // 🌟 難度特徵開關
+        // 難度特徵開關
         public enum Difficulty { Easy, Hard }
         private readonly Difficulty _difficulty;
 
