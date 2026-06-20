@@ -35,13 +35,15 @@ namespace test01.View.Playing
         public void Initialize(GameManager gameManager)
         {
             _gameManager = gameManager;
+            _gameManager.OnRevolutionStarted += HandleRevolutionStarted;
+            _gameManager.OnRevolutionEnded += HandleRevolutionEnded;
             this._hand.Initialize(gameManager);
             this._deskView.Initialize(gameManager);
         }
         private void BindBackgroundClick(Control parent)
         {
             //點擊非按鈕或是卡牌都會取消選取
-            if (!(parent is Button) && !(parent is CardView))
+            if (parent is not Button && parent is not CardView)
             {
                 parent.Click += Background_Click;
             }
@@ -64,6 +66,14 @@ namespace test01.View.Playing
 
             //對外廣播pass觸發事件
             OnPassRequested?.Invoke();
+        }
+        private void HandleRevolutionStarted(object sender, EventArgs e)
+        {
+            this.BackColor = Color.FromArgb(215, 50, 50);
+        }
+        private void HandleRevolutionEnded(object sender, EventArgs e)
+        {
+            this.BackColor = Color.FromArgb(40, 44, 52);
         }
     }
 }

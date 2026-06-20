@@ -16,6 +16,7 @@ namespace test01.Controller.States.GameStates
 
         public void Enter(GameManager gm)
         {
+            gm.NotifyRevolutionEnded();
             gm.Winners.Clear();
             gm.Losers.Clear();
             gm.DiscardPile.Clear();

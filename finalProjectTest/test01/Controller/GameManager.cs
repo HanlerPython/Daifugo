@@ -42,7 +42,9 @@ namespace test01.Controller
         public event EventHandler OnPlayerTurnStarted;
         //卡牌交換時改變場中文字
         public event EventHandler OnCardExchanging;
-
+        //革命時改變背景顏色
+        public event EventHandler OnRevolutionStarted;
+        public event EventHandler OnRevolutionEnded;
         public GameManager()
         {
             _players = new List<Player>();
@@ -141,7 +143,14 @@ namespace test01.Controller
         {
             OnCardExchanging?.Invoke(this, EventArgs.Empty);
         }
-
+        public void NotifyRevolutionStarted()
+        {
+            OnRevolutionStarted?.Invoke(this, EventArgs.Empty);
+        }
+        public void NotifyRevolutionEnded()
+        {
+            OnRevolutionEnded?.Invoke(this, EventArgs.Empty);
+        }
         //由個別state實作
         public bool TryPlayCard(IEnumerable<Card> cards) => _currentState.PlayCard(this, cards);
         public bool TryPass() => _currentState.Pass(this);

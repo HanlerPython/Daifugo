@@ -100,6 +100,7 @@ namespace test01.Controller.States.GameStates
             gm.IsSuitLocked = false;
             gm.PassCount = 0;
             gm.LastPlayedPlayerIdx = -1;
+            gm.LastPlay = null;
             gm.CurrentPlay = null;
             gm.CurrentHands = Hands.Null;
             gm.NotifyDeskChanged();
