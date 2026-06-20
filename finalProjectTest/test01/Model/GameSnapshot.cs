@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using test01.Controller;
 using static test01.Model.HandsEvaluator;
 
@@ -10,22 +8,34 @@ namespace test01.Model
 {
     public class GameSnapshot
     {
-        public Hands CurrentHandsType { get; } // 場上牌型 (如同花順、三條)
-        public int CurrentWeight { get; }      // 當前場上權重
-        public int CurrentCardCount { get; }   // 當前場上張數
-        public bool IsReversed { get; }        // 是否處於革命/反轉狀態
+        public int CurrentPlayerIdx { get; }
+        public Hands CurrentHandsType { get; }
+        public int CurrentWeight { get; }
+        public int CurrentCardCount { get; }
+        public bool IsReversed { get; }
+        public IReadOnlyList<Card> DiscardPile { get; }
+        public List<int> OpponentHandCounts { get; }
+        public bool IsSuitLocked { get; }
+        public List<Card.Suit> CurrentPlaySuits { get; }
 
-        // 新增：公開建構子，讓你可以在測試區 Mock，也讓隊友未來可以生成快照
         public GameSnapshot(GameManager gm)
         {
             CurrentHandsType = gm.CurrentHands;
-            if (gm.CurrentPlay != null)
-                CurrentCardCount = gm.CurrentPlay.Count();
-            else
-                CurrentCardCount = 0;
+            CurrentCardCount = gm.CurrentPlay?.Count() ?? 0;
             IsReversed = gm.IsReversed;
-            int weight = gm.HandsEvaluator.GetHandsWeight(CurrentHandsType, gm.CurrentPlay, IsReversed);
-            CurrentWeight = weight;
+            CurrentWeight = gm.HandsEvaluator.GetHandsWeight(CurrentHandsType, gm.CurrentPlay, IsReversed);
+
+            DiscardPile = gm.DiscardPile?.ToList() ?? new List<Card>();
+
+            OpponentHandCounts = gm.Players
+                .Where(p => p.Id != gm.CurrentPlayerIdx && p.StateType != Player.State.Finished)
+                .Select(p => p.Hand.Count)
+                .ToList();
+            CurrentPlayerIdx = gm.CurrentPlayerIdx;
+
+            //擷取鎖花色情報
+            IsSuitLocked = gm.IsSuitLocked;
+            CurrentPlaySuits = gm.CurrentPlay?.Select(c => c.SuitType).ToList() ?? new List<Card.Suit>();
         }
 
         public List<IEnumerable<Card>> GetValidPlays(IEnumerable<Card> hand)
@@ -33,33 +43,115 @@ namespace test01.Model
             var validPlays = new List<IEnumerable<Card>>();
             var playerHand = hand.ToList();
 
-            // 1. 永遠保留 Pass 的權利
-            validPlays.Add(new List<Card>());
+            validPlays.Add(new List<Card>()); // 1. 永遠保留 Pass
 
-            // 修正：直接讀取自身的屬性，不再需要 context
             int currentCount = this.CurrentCardCount;
             int currentWeight = this.CurrentWeight;
             bool isReversed = this.IsReversed;
             Hands currentHandsType = this.CurrentHandsType;
 
-            // 2. 自由出牌狀態 (場上無牌，或是自己贏得上一輪)
+            // 2. 自由出牌狀態
             if (currentCount == 0)
             {
-                // 包含所有單張、所有可能的對子、三條、鐵支、同花順
                 validPlays.AddRange(GenerateAllSingleCards(playerHand));
                 validPlays.AddRange(GenerateAllSameRanks(playerHand));
                 validPlays.AddRange(GenerateAllFlushes(playerHand));
                 return validPlays;
             }
 
-            // 3. 跟牌狀態 (必須符合場上牌型與張數，且權重更大)
+            // 3. 一般跟牌狀態
             if (currentHandsType == Hands.SameRank)
-            {
                 validPlays.AddRange(GetValidSameRanks(playerHand, currentCount, currentWeight, isReversed));
-            }
             else if (currentHandsType == Hands.Flush)
-            {
                 validPlays.AddRange(GetValidFlushes(playerHand, currentCount, currentWeight, isReversed));
+
+            if (currentCount > 0)
+            {
+                var allBombs = GenerateAllSameRanks(playerHand).Where(p => p.Count() >= 4).ToList();
+                var allFlushBombs = GenerateAllFlushes(playerHand).Where(p => p.Count() >= 4).ToList();
+                var allAvailableBombs = allBombs.Concat(allFlushBombs).ToList();
+
+                foreach (var bomb in allAvailableBombs)
+                {
+                    //只有當場上「本來就已經是炸彈 (張數>=4)」時，才能出張數更多或權重更大的炸彈！
+                    if (currentCount >= 4)
+                    {
+                        if (bomb.Count() > currentCount)
+                        {
+                            validPlays.Add(bomb);
+                        }
+                        else if (bomb.Count() == currentCount)
+                        {
+                            int bombWeight = bomb.First(c => c.SuitType != Card.Suit.JOKER).Weight;
+                            bool canBeat = isReversed ? (bombWeight < currentWeight) : (bombWeight > currentWeight);
+                            if (canBeat) validPlays.Add(bomb);
+                        }
+                    }
+                }
+            }
+
+            if (IsSuitLocked && currentCount > 0)
+            {
+                var lockedPlays = new List<IEnumerable<Card>>();
+                var requiredSuits = CurrentPlaySuits.Where(s => s != Card.Suit.JOKER).ToList();
+
+                foreach (var play in validPlays)
+                {
+                    // 特權 A: PASS 永遠合法
+                    if (!play.Any())
+                    {
+                        lockedPlays.Add(play);
+                        continue;
+                    }
+
+                    // 特權 B: 炸彈 (4張以上) 擁有破壞鎖定的特權，絕對合法
+                    if (play.Count() >= 4)
+                    {
+                        lockedPlays.Add(play);
+                        continue;
+                    }
+
+                    // 特權 C: Joker 是法外狂徒，打出的牌只要全是 Joker 就放行
+                    if (play.All(c => c.SuitType == Card.Suit.JOKER))
+                    {
+                        lockedPlays.Add(play);
+                        continue;
+                    }
+
+                    // 一般判定：檢查花色是否精準匹配
+                    var providedSuits = play.Where(c => c.SuitType != Card.Suit.JOKER).Select(c => c.SuitType).ToList();
+                    bool isMatch = true;
+
+                    foreach (var reqSuit in requiredSuits)
+                    {
+                        if (providedSuits.Contains(reqSuit))
+                        {
+                            providedSuits.Remove(reqSuit); // 匹配成功，消耗掉一個 (支援未來如果加開雙重鎖定)
+                        }
+                        else
+                        {
+                            isMatch = false;
+                            break;
+                        }
+                    }
+
+                    if (isMatch)
+                    {
+                        lockedPlays.Add(play);
+                    }
+                }
+                validPlays = lockedPlays;
+            }
+            //黑桃3單防
+            if (currentCount == 1 && currentWeight >= 13)
+            {
+                var spade3 = playerHand.FirstOrDefault(c => c.RankType == Card.Rank.THREE && c.SuitType == Card.Suit.SPADES);
+
+                // 防呆：確保黑桃3還沒被前面的邏輯加進去
+                if (spade3 != null && !validPlays.Any(p => p.Count() == 1 && p.First() == spade3))
+                {
+                    validPlays.Add(new List<Card> { spade3 });
+                }
             }
 
             return validPlays;
@@ -73,42 +165,26 @@ namespace test01.Model
         private List<IEnumerable<Card>> GenerateAllSameRanks(List<Card> hand)
         {
             var results = new List<IEnumerable<Card>>();
-
-            // 1. 分離 Joker 與一般牌
             var jokers = hand.Where(c => c.SuitType == Card.Suit.JOKER).OrderByDescending(c => c.Weight).ToList();
             var regularCards = hand.Where(c => c.SuitType != Card.Suit.JOKER).ToList();
 
-            // 2. 純 Joker 對子 (如果手牌剛好有兩張大/小王)
-            if (jokers.Count >= 2)
-            {
-                results.Add(jokers.Take(2).ToList());
-            }
+            if (jokers.Count >= 2) results.Add(jokers.Take(2).ToList());
 
-            // 3. 一般牌 + Joker 補位窮舉
             var groups = regularCards.GroupBy(c => c.Weight);
             foreach (var group in groups)
             {
                 int actualCount = group.Count();
                 int maxPossibleCount = actualCount + jokers.Count;
 
-                // 窮舉可能的長度：2(對子), 3(三條), 4(鐵支)
                 for (int targetLength = 2; targetLength <= 4; targetLength++)
                 {
-                    // 如果這組數字的「實體牌 + 手上的 Joker 數量」足夠湊出目標長度
-                    if (maxPossibleCount >= targetLength && actualCount > 0)
-                    {
-                        // 計算需要徵召幾張 Joker
-                        int neededJokers = targetLength - actualCount;
-                        neededJokers = Math.Max(0, neededJokers); // 如果實體牌已經夠了，就不需要 Joker
+                    if (maxPossibleCount < targetLength || actualCount == 0) continue;
 
-                        var play = group.Take(targetLength - neededJokers)
-                                        .Concat(jokers.Take(neededJokers))
-                                        .ToList();
-                        results.Add(play);
-                    }
+                    int neededJokers = Math.Max(0, targetLength - actualCount);
+                    var play = group.Take(targetLength - neededJokers).Concat(jokers.Take(neededJokers)).ToList();
+                    results.Add(play);
                 }
             }
-
             return results;
         }
 
@@ -133,23 +209,20 @@ namespace test01.Model
                         int rankSpread = cards[j].Weight - cards[i].Weight + 1;
                         int internalGaps = rankSpread - actualCards;
 
+                        // 🌟 攤平嵌套：提早 return 或 continue
                         if (internalGaps > jokerCount) continue;
 
                         int totalPotentialLength = actualCards + jokerCount;
-                        if (totalPotentialLength >= 3)
-                        {
-                            int neededJokers = internalGaps;
-                            int extraJokers = Math.Min(jokerCount - neededJokers, 13 - rankSpread);
+                        if (totalPotentialLength < 3) continue;
 
-                            var play = cards.Skip(i).Take(actualCards)
-                                            .Concat(jokers.Take(neededJokers + extraJokers))
-                                            .ToList();
+                        int neededJokers = internalGaps;
+                        int extraJokers = Math.Min(jokerCount - neededJokers, 13 - rankSpread);
 
-                            if (play.Count >= 3)
-                            {
-                                results.Add(play);
-                            }
-                        }
+                        var play = cards.Skip(i).Take(actualCards)
+                                        .Concat(jokers.Take(neededJokers + extraJokers))
+                                        .ToList();
+
+                        if (play.Count >= 3) results.Add(play);
                     }
                 }
             }
@@ -159,51 +232,45 @@ namespace test01.Model
         private List<IEnumerable<Card>> GetValidSameRanks(List<Card> hand, int requiredCount, int currentWeight, bool isReversed)
         {
             var results = new List<IEnumerable<Card>>();
-
-            // 1. 預先分離鬼牌與一般牌
-            var jokers = hand.Where(c => c.SuitType == Card.Suit.JOKER)
-                             .OrderByDescending(c => c.Weight) // 確保大王排前面
-                             .ToList();
+            var jokers = hand.Where(c => c.SuitType == Card.Suit.JOKER).OrderByDescending(c => c.Weight).ToList();
             var regularCards = hand.Where(c => c.SuitType != Card.Suit.JOKER).ToList();
 
-            // 2. 🌟 修正：處理「純鬼牌」打法 🌟
             if (jokers.Count >= requiredCount)
             {
-                // 如果場上是一般牌 (Weight < 13)，Joker 永遠可以直接壓制 (無視革命)
                 bool isCurrentNormalCard = currentWeight < 13;
-
-                // 如果場上已經是 Joker，純比大小 (例如大王 14 > 小王 13)，且不受革命反轉影響
                 bool isJokerBeatingJoker = jokers.First().Weight > currentWeight;
 
                 if (isCurrentNormalCard || isJokerBeatingJoker)
-                {
                     results.Add(jokers.Take(requiredCount).ToList());
-                }
             }
 
-            // 3. 處理「一般牌 + 鬼牌補位」打法 (這裡的邏輯原本就是對的，因為它是用一般牌的 weight 去比較)
             var groupedByRank = regularCards.GroupBy(c => c.Weight);
             foreach (var group in groupedByRank)
             {
                 int weight = group.Key;
-                bool isValidWeight = isReversed ? (weight < currentWeight) : (weight > currentWeight);
+                bool isValidWeight;
 
-                if (isValidWeight)
+                // 🌟 核心防禦：如果場上是鬼牌 (權重 >= 13)，一般牌絕對無法壓制！
+                if (currentWeight >= 13)
                 {
-                    int availableCards = group.Count();
-                    int missingCount = requiredCount - availableCards;
-                    int neededJokers = Math.Max(0, missingCount);
+                    isValidWeight = false;
+                }
+                else
+                {
+                    isValidWeight = isReversed ? (weight < currentWeight) : (weight > currentWeight);
+                }
 
-                    if (neededJokers <= jokers.Count)
-                    {
-                        var play = group.Take(requiredCount - neededJokers)
-                                        .Concat(jokers.Take(neededJokers)) // 這裡會從大王開始拿
-                                        .ToList();
-                        results.Add(play);
-                    }
+                if (!isValidWeight) continue;
+
+                int availableCards = group.Count();
+                int neededJokers = Math.Max(0, requiredCount - availableCards);
+
+                if (neededJokers <= jokers.Count)
+                {
+                    var play = group.Take(requiredCount - neededJokers).Concat(jokers.Take(neededJokers)).ToList();
+                    results.Add(play);
                 }
             }
-
             return results;
         }
 
@@ -229,18 +296,26 @@ namespace test01.Model
                         int internalGaps = rankSpread - actualCards;
 
                         if (internalGaps > jokerCount) continue;
+                        if (actualCards + jokerCount < requiredCount || rankSpread > requiredCount) continue;
 
-                        if (actualCards + jokerCount >= requiredCount && rankSpread <= requiredCount)
+                        int maxPossibleWeight = cards[i].Weight + requiredCount - 1;
+                        bool isValidWeight;
+
+                        // 如果場上的同花順包含頂級鬼牌權重，嚴禁一般同花順用反轉邏輯壓制
+                        if (currentWeight >= 13)
                         {
-                            int maxPossibleWeight = cards[i].Weight + requiredCount - 1;
-                            bool isValidWeight = isReversed ? (cards[i].Weight < currentWeight) : (maxPossibleWeight > currentWeight);
+                            isValidWeight = false;
+                        }
+                        else
+                        {
+                            isValidWeight = isReversed ? (cards[i].Weight < currentWeight) : (maxPossibleWeight > currentWeight);
+                        }
 
-                            if (isValidWeight)
+                        if (isValidWeight)
+                        {
                             {
                                 int neededJokersToReachCount = requiredCount - actualCards;
-                                var play = cards.Skip(i).Take(actualCards)
-                                                .Concat(jokers.Take(neededJokersToReachCount))
-                                                .ToList();
+                                var play = cards.Skip(i).Take(actualCards).Concat(jokers.Take(neededJokersToReachCount)).ToList();
                                 results.Add(play);
                             }
                         }
