@@ -1,5 +1,10 @@
-﻿################################################################################
-# 這個 .gitignore 檔案由 Microsoft(R) Visual Studio 自動建立。
-################################################################################
+﻿# Visual Studio 本機與暫存資料夾
+.vs/
 
-/finalProjectTest/.vs/finalProjectTest.slnx/FileContentIndex
+# 編譯輸出與中介資料夾
+[Bb]in/
+[Oo]bj/
+
+# 使用者特定設定檔
+*.user
+*.suo
