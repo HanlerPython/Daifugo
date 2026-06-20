@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using test01.Controller;
-using static test01.Model.HandsEvaluator;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace test01.Model.Interfaces
 {
@@ -14,18 +14,9 @@ namespace test01.Model.Interfaces
 
     public class GreedyAIStrategy : IPlayerStrategy
     {
-        // 🌟 難度特徵開關
-        public enum Difficulty { Easy, Hard }
-        private readonly Difficulty _difficulty;
-
-        // 建構子 (預設為困難模式)
-        public GreedyAIStrategy(Difficulty difficulty = Difficulty.Hard)
-        {
-            _difficulty = difficulty;
-        }
-
         public IEnumerable<Card> DecidePlay(GameSnapshot context, IEnumerable<Card> hand)
         {
+            // 修正參數傳遞：假設隊友的合約或你的 Mock 方法叫 GenerateValidPlays
             List<IEnumerable<Card>> validPlays = context.GetValidPlays(hand);
 
             if (validPlays == null || !validPlays.Any())
@@ -38,7 +29,9 @@ namespace test01.Model.Interfaces
 
             foreach (var play in validPlays)
             {
+                // 這裡依賴 Card 正確實作 Equals 與 GetHashCode
                 IEnumerable<Card> remainingHand = hand.Except(play);
+
                 int currentScore = EvaluateState(context, play, remainingHand);
 
                 if (currentScore > bestScore)
@@ -53,152 +46,96 @@ namespace test01.Model.Interfaces
 
         public int EvaluateState(GameSnapshot context, IEnumerable<Card> play, IEnumerable<Card> remainingHand)
         {
-            // 1. PASS 的處理 (提早 Return)
-            if (play == null || !play.Any())
-            {
-                if (context.CurrentCardCount == 0) return int.MinValue;
-                return CalculateHandValue(remainingHand, context.IsReversed, new List<Card>());
-            }
-
-            bool futureIsReversed = context.IsReversed;
-            if (play.Count() >= 4) futureIsReversed = !context.IsReversed;
-
-            // ==========================================================
-            // 終局生死判斷
-            // ==========================================================
+            // 1. 最高優先級：終結比賽
             if (!remainingHand.Any())
             {
-                if (IsFoulCard(play.First(), futureIsReversed)) return -2000000;
                 return 1000000;
             }
 
-            // 慢性自殺防禦
-            if (remainingHand.All(c => IsFoulCard(c, futureIsReversed)))
+            // 2. Pass (不出牌) 的處理
+            if (play == null || !play.Any())
             {
-                return -1000000;
+                // 嚴格防呆：如果是自由出牌 (Lead) 狀態，絕對不允許 Pass
+                if (context.CurrentCardCount == 0) return int.MinValue;
+
+                // Pass 的分數就是最純粹的剩餘手牌價值，不給任何同情分
+                return CalculateHandValue(remainingHand, context.IsReversed);
             }
 
-            List<Card> knownCards = new List<Card>();
-            if (_difficulty == Difficulty.Hard)
-            {
-                knownCards = context.DiscardPile.Concat(remainingHand).ToList();
-            }
+            int score = CalculateHandValue(remainingHand, context.IsReversed);
+            score += (play.Count() * 150);
 
-            // 基礎手牌價值計算
-            int score = CalculateHandValue(remainingHand, futureIsReversed, knownCards);
-            score += (play.Count() * 400) + 500;
-
-            // ==========================================================
-            // 聽牌
-            // ==========================================================
-            bool canFinishNextTurn = IsReadyToWin(remainingHand);
-            if (canFinishNextTurn)
-            {
-                score += 50000;
-            }
-
-            // ==========================================================
-            // 丟垃圾防呆
-            // ==========================================================
-            if (context.CurrentCardCount == 0 && play.Any())
-            {
-                int dPower = GetDynamicPower(play.First(), context.IsReversed, knownCards);
-
-                if (dPower >= 11) score -= 3000;
-                score -= (dPower * 50);
-            }
-
-            // ==========================================================
-            // 主動觸發鎖花色獎勵 (惡意刺殺)
-            // ==========================================================
-            if (_difficulty == Difficulty.Hard && play.Any() && context.CurrentCardCount > 0 && !context.IsSuitLocked)
-            {
-                var playSuits = play.Select(c => c.SuitType).ToList();
-                var reqSuits = context.CurrentPlaySuits;
-
-                if (!playSuits.Contains(Card.Suit.JOKER) && !reqSuits.Contains(Card.Suit.JOKER) && playSuits.Count == reqSuits.Count)
-                {
-                    bool isExactMatch = true;
-                    var tempReq = reqSuits.ToList();
-                    foreach (var suit in playSuits)
-                    {
-                        if (tempReq.Contains(suit)) tempReq.Remove(suit);
-                        else { isExactMatch = false; break; }
-                    }
-
-                    if (isExactMatch)
-                    {
-                        score += 1500;
-                    }
-                }
-            }
-
-            var playedRanks = play.Select(c => c.RankType).ToList();
-            if (playedRanks.Contains(Card.Rank.EIGHT)) score += 500;
-            if (playedRanks.Contains(Card.Rank.SEVEN) || playedRanks.Contains(Card.Rank.TEN)) score += (play.Count() * 150);
-
-            // ==========================================================
-            // 防禦模式
-            // ==========================================================
-            if (_difficulty == Difficulty.Hard && context.OpponentHandCounts.Any(count => count <= 2))
-            {
-                if (context.CurrentCardCount == 0 && play.Count() == 1)
-                {
-                    if (GetStandardPower(play.First(), futureIsReversed) < 10) score -= 20000;
-                }
-
-                if (context.CurrentCardCount > 0 && play.Count() > 0)
-                {
-                    score += GetStandardPower(play.First(), futureIsReversed) * 300;
-                }
-
-                if (play.Count() >= 2) score += 1000;
-            }
-
-            // ==========================================================
-            // Joker 控制與懲罰
-            // ==========================================================
+            // 🌟 核心升級：Joker 的終局必勝判斷 🌟
             int usedJokers = play.Count(c => c.SuitType == Card.Suit.JOKER);
-            if (usedJokers > 0 && !canFinishNextTurn)
+            if (usedJokers > 0)
             {
-                score -= (usedJokers * 1000);
+                bool canFinishNextTurn = false;
+
+                // 如果打出 Joker 後，手牌只剩下 1 張，
+                // 既然 Joker 幾乎保證能搶下先手，那剩下的這 1 張下回合必定能無條件打出獲勝！
+                if (remainingHand.Count() == 1)
+                {
+                    canFinishNextTurn = true;
+                }
+                // 如果剩下多張，但全部都是同一個數字（例如剩一對 6 或三條 8）
+                // 拿到先手後同樣可以一次全部打出獲勝！
+                else if (remainingHand.Any() && remainingHand.GroupBy(c => c.RankType).Count() == 1)
+                {
+                    canFinishNextTurn = true;
+                }
+
+                if (canFinishNextTurn)
+                {
+                    // AI 發現了必勝連招！免除 Joker 懲罰，並給予即將獲勝的極高分數
+                    return 50000;
+                }
+                else
+                {
+                    // 如果這不是必勝連招，那就乖乖接受浪費 Joker 的高額扣分
+                    score -= (usedJokers * 1000);
+                }
             }
 
             return score;
         }
 
-        private int CalculateHandValue(IEnumerable<Card> hand, bool isReversed, List<Card> knownCards)
+        // 將整手牌的評估邏輯獨立出來
+        private int CalculateHandValue(IEnumerable<Card> hand, bool isReversed)
         {
             int totalValue = 0;
+
+            // 實作重點 1: 剩餘手牌的單卡價值加總
             foreach (var card in hand)
             {
-                totalValue += GetHeuristicScore(card, isReversed, knownCards);
+                totalValue += GetHeuristicScore(card, isReversed);
             }
 
+            // 實作重點 2: 牌型加分 (鼓勵 AI 湊對子，不要隨便打單張拆牌)
+            // 排除 Joker 後，計算相同數字的數量
             var groups = hand.Where(c => c.SuitType != Card.Suit.JOKER).GroupBy(c => c.RankType);
             foreach (var group in groups)
             {
                 int count = group.Count();
-                if (count == 2) totalValue += 100;
-                if (count == 3) totalValue += 300;
-                if (count >= 4) totalValue += 1000;
+                if (count == 2) totalValue += 100;  // 一對的額外價值
+                if (count == 3) totalValue += 300;  // 三條的額外價值
+                if (count == 4) totalValue += 1000; // 鐵支(革命種子)的極大價值
             }
 
             return totalValue;
         }
 
-        private int GetStandardPower(Card card, bool isReversed)
+        // 將原本的 EvalConst 改寫為 C# 7.3 支援的傳統 switch，並結合革命反轉的數學邏輯
+        private int GetHeuristicScore(Card card, bool isReversed)
         {
-            if (card.SuitType == Card.Suit.JOKER) return card.RankType == Card.Rank.RED ? 14 : 13;
-
-            int baseWeight; switch (card.RankType)
+            int baseWeight;
+            switch (card.RankType)
             {
                 case Card.Rank.THREE: baseWeight = 0; break;
                 case Card.Rank.FOUR: baseWeight = 1; break;
                 case Card.Rank.FIVE: baseWeight = 2; break;
                 case Card.Rank.SIX: baseWeight = 3; break;
                 case Card.Rank.SEVEN: baseWeight = 4; break;
-                case Card.Rank.EIGHT: baseWeight = 8; break;
+                case Card.Rank.EIGHT: baseWeight = 8; break; // 暫定為線性數值，後續由次方放大
                 case Card.Rank.NINE: baseWeight = 6; break;
                 case Card.Rank.TEN: baseWeight = 7; break;
                 case Card.Rank.JACK: baseWeight = 8; break;
@@ -206,78 +143,27 @@ namespace test01.Model.Interfaces
                 case Card.Rank.KING: baseWeight = 10; break;
                 case Card.Rank.ACE: baseWeight = 11; break;
                 case Card.Rank.TWO: baseWeight = 12; break;
+                case Card.Rank.BLACK: return 5000; // 小王絕對特權
+                case Card.Rank.RED: return 6000;   // 大王絕對特權
                 default: baseWeight = 0; break;
             }
 
-            return isReversed ? (12 - baseWeight) : baseWeight;
-        }
+            // 處理革命狀態 (IsReversed)
+            int effectivePower = isReversed ? (12 - baseWeight) : baseWeight;
 
-        private int GetDynamicPower(Card card, bool isReversed, List<Card> knownCards)
-        {
-            if (card.SuitType == Card.Suit.JOKER) return card.RankType == Card.Rank.RED ? 14 : 13;
+            // 使用指數放大，讓 AI 知道保留 2 (144分) 遠比保留 3 (0分) 重要
+            int score = (int)Math.Pow(effectivePower, 2);
 
-            int myPower = GetStandardPower(card, isReversed);
-            int dynamicPower = myPower;
-
-            if (knownCards != null && knownCards.Any())
-            {
-                int totalStrongerCardsInDeck = ((12 - myPower) * 4) + 2;
-
-                int seenStrongerCards = knownCards.Count(c => GetStandardPower(c, isReversed) > myPower);
-                int strongerCardsLeft = totalStrongerCardsInDeck - seenStrongerCards;
-
-                if (strongerCardsLeft <= 0) dynamicPower = 12;
-                else if (strongerCardsLeft <= 2) dynamicPower = Math.Max(myPower, 11);
-            }
-
-            return dynamicPower;
-        }
-
-        private int GetHeuristicScore(Card card, bool isReversed, List<Card> knownCards)
-        {
-            int dynamicPower = GetDynamicPower(card, isReversed, knownCards);
-            int score = (int)Math.Pow(dynamicPower, 2);
-
-            if (dynamicPower == 11) score += 400;
-            if (dynamicPower == 12) score += 800;
-            if (dynamicPower >= 13) score += 1500;
-
-            switch (card.RankType)
-            {
-                case Card.Rank.EIGHT: score += 300; break;
-                case Card.Rank.SEVEN:
-                case Card.Rank.TEN: score += 200; break;
-                case Card.Rank.FIVE:
-                case Card.Rank.JACK: score += 100; break;
-                case Card.Rank.THREE:
-                    if (card.SuitType == Card.Suit.SPADES) score += 400;
-                    break;
-            }
+            // 針對特殊戰術牌 (如 8 切) 的額外加分
+            if (card.RankType == Card.Rank.EIGHT) score += 50;
 
             return score;
         }
 
         public IEnumerable<Card> DecideDiscard(GameSnapshot context, IEnumerable<Card> hand, int count)
         {
-            if (count <= 0 || hand == null || !hand.Any()) return new List<Card>();
-
-            List<Card> knownCards = _difficulty == Difficulty.Hard ? context.DiscardPile.Concat(hand).ToList() : new List<Card>();
-            return hand.OrderBy(card => GetHeuristicScore(card, context.IsReversed, knownCards)).Take(count).ToList();
-        }
-
-        private bool IsFoulCard(Card card, bool isReversed)
-        {
-            if (card.SuitType == Card.Suit.JOKER) return true;
-            if (!isReversed && card.RankType == Card.Rank.TWO) return true;
-            if (isReversed && card.RankType == Card.Rank.THREE) return true;
-            return false;
-        }
-
-        private bool IsReadyToWin(IEnumerable<Card> hand)
-        {
-            if (hand == null || !hand.Any()) return true;
-            if (hand.Count() == 1) return true;
-            return hand.GroupBy(c => c.RankType).Count() == 1;
+            // 捨棄邏輯：利用剛寫好的 GetHeuristicScore 找出價值最低的 N 張牌捨棄
+            return hand.OrderBy(card => GetHeuristicScore(card, context.IsReversed)).Take(count).ToList();
         }
     }
 }
