@@ -97,7 +97,7 @@ namespace test01.Controller.States.GameStates
                     gm.NotifyCardExchanging();
                 }
             }
-            gm.NotifyPlayerHandChanged();
+            gm.NotifyHandChanged();
         }
 
         //初始化階段只處理換牌操作
@@ -110,7 +110,6 @@ namespace test01.Controller.States.GameStates
             }
 
             ExchangeCards(gm.Players[0], _targetAi, cards);
-            gm.NotifyPlayerHandChanged();
             gm.CurrentPlayerIdx = -1;
             RoundStart(gm);
 

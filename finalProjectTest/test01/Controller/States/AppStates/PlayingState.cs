@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using test01.View;
 using test01.View.Playing;
+using static test01.Model.Interfaces.GreedyAIStrategy;
 
 namespace test01.Controller.States.AppStates
 {
@@ -12,18 +13,23 @@ namespace test01.Controller.States.AppStates
     {
         private PlayingControl _view;
         private GameManager _gameManager;
+        private readonly Difficulty _difficulty;
 
+        public PlayingState(Difficulty difficulty)
+        {
+            _difficulty = difficulty;
+        }
         public void Enter(AppManager manager)
         {
             _view = new PlayingControl();
-            _gameManager = new GameManager();
+            _gameManager = new GameManager(_difficulty);
 
             //初始化顯示元件以及GM
             _view.Initialize(_gameManager);
             _gameManager.Initialize();
 
             //訂閱pass按鈕事件
-            _view.OnPassRequested += HandlePlayerPass;
+            _view.OnPlayerPass += HandlePlayerPass;
 
             //呼叫app manager的渲染功能
             manager.ShowView(_view);
@@ -34,7 +40,7 @@ namespace test01.Controller.States.AppStates
             _view?.Dispose();
             _gameManager = null;
         }
-        private void HandlePlayerPass()
+        private void HandlePlayerPass(object sender, EventArgs e)
         {
             _gameManager.TryPass();
         }

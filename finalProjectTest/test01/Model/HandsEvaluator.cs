@@ -23,7 +23,7 @@ namespace test01.Model
         //回傳不需要被改為灰階的牌
         public IEnumerable<Card> Recommand(IEnumerable<Card> hand, IEnumerable<Card> selectedCards, IEnumerable<Card> currentPlay, Hands currentHands, bool isReversed, bool isSuitLocked)
         {
-            List<Card> matchingCards = new List<Card>();
+            List<Card> matchingCards = new();
             List<Card> playerHand = hand.ToList();
             int handJokerCount = 0; //手中的joker數量
             for(int i = playerHand.Count() - 1; i >= 0; i--)
@@ -84,8 +84,17 @@ namespace test01.Model
                 }
 
                 int currentWeight = GetHandsWeight(currentHands, currentPlay, isReversed);
+                int selJokerCnt = GetJokerCount(selectedCards);
+                int nonJokerCardsCnt = selectedCards.Count() - selJokerCnt;
+
+                //已經選滿了場上要求的張數，直接回傳
+                if (selectedCards.Any() && selectedCards.Count() >= currentCount)
+                {
+                    return selectedCards;
+                }
+
                 //還沒選牌的初始狀態
-                if (selectedCards.Count() == 0)
+                if (nonJokerCardsCnt == 0)
                 {
                     if (currentHands == Hands.SameRank)
                     {
@@ -163,17 +172,6 @@ namespace test01.Model
                 //已選牌
                 else
                 {
-                    if (selectedCards.Count() >= currentCount) //選擇張數已達上限
-                        return selectedCards; //只推薦原本已選的牌
-
-                    //算出已選的實體牌數量
-                    int selJokerCnt = GetJokerCount(selectedCards);
-                    int nonJokerCardsCnt = selectedCards.Count() - selJokerCnt;
-
-                    //如果只有選鬼牌，誰都能搭
-                    if (nonJokerCardsCnt == 0)
-                        return null;
-
                     //如果場上是同點
                     if (currentHands == Hands.SameRank)
                     {
@@ -241,7 +239,7 @@ namespace test01.Model
         {
             bool isFlush = false;
             //檢查是否為同點
-            HashSet<Card.Suit> suits = new HashSet<Card.Suit>();
+            HashSet<Card.Suit> suits = new();
             int jokerCount = 0;
             int rank = hands.First().Weight;
             foreach(Card card in hands)
@@ -304,7 +302,7 @@ namespace test01.Model
         }
         private IEnumerable<Card> FindSameRank(IEnumerable<Card> hand, IEnumerable<Card> selectedCards)
         {
-            List<Card> matchingCards = new List<Card>();
+            List<Card> matchingCards = new();
             int selectedRank = selectedCards.First().Weight;
             foreach (Card card in hand)
             {
@@ -319,7 +317,7 @@ namespace test01.Model
         //考量場面牌型去尋找
         private IEnumerable<Card> FindSameRank(IEnumerable<Card> hand, IEnumerable<Card> selectedCards, int currentCount, int currentWeight, bool isReversed, int handJokerCount)
         {
-            List<Card> matchingCards = new List<Card>();
+            List<Card> matchingCards = new();
 
             //排除鬼牌取得權重
             var realSelected = selectedCards.Where(c => c.SuitType != Card.Suit.JOKER).ToList();
@@ -346,7 +344,7 @@ namespace test01.Model
         }
         private IEnumerable<Card> FindFlush(IEnumerable<Card> hand, IEnumerable<Card> selectedCards, int handJokerCount)
         {
-            List<Card> matchingCards = new List<Card>();
+            List<Card> matchingCards = new();
             if (selectedCards == null || !selectedCards.Any()) return matchingCards;
 
             //取得目標花色與選取範圍的邊界 (最小與最大點數)
@@ -441,7 +439,7 @@ namespace test01.Model
         //受限於場上張數與權重的同花順搜尋
         private IEnumerable<Card> FindFlush(IEnumerable<Card> hand, IEnumerable<Card> selectedCards, int currentCount, int currentWeight, bool isReversed, int handJokerCount)
         {
-            List<Card> matchingCards = new List<Card>();
+            List<Card> matchingCards = new();
 
             var realSelected = selectedCards.Where(c => c.SuitType != Card.Suit.JOKER).ToList();
             if (!realSelected.Any()) return matchingCards;

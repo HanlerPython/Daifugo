@@ -118,7 +118,7 @@ namespace test01.Controller.States.GameStates
             }
             else if(currentPlayer.Id != 0) //人機
             {
-                GameSnapshot gs = new GameSnapshot(gm);
+                GameSnapshot gs = new(gm);
                 if (_giveCount > 0)
                 {
                     var cardsToGiveAway = gm.Ai.DecideDiscard(gs, currentPlayer.Hand, _giveCount);
@@ -152,8 +152,7 @@ namespace test01.Controller.States.GameStates
                     Player nextPlayer = gm.Players[gm.GetNextPlayerIdx()];
                     currentPlayer.RemoveCards(cards);
                     nextPlayer.AddCards(cards);
-                    if (currentPlayer.Id == 0 || nextPlayer.Id == 0)
-                        gm.NotifyPlayerHandChanged();
+                    gm.NotifyHandChanged();
                     _giveCount = 0;
 
                     //沒牌的話直接跳過
@@ -172,8 +171,7 @@ namespace test01.Controller.States.GameStates
                 {
                     Player currentPlayer = gm.Players[gm.CurrentPlayerIdx];
                     currentPlayer.RemoveCards(cards);
-                    if (currentPlayer.Id == 0)
-                        gm.NotifyPlayerHandChanged();
+                    gm.NotifyHandChanged();
                     _discardCount = 0;
                 }
             }

@@ -24,6 +24,7 @@ namespace test01.Model
             CurrentCardCount = gm.CurrentPlay?.Count() ?? 0;
             IsReversed = gm.IsReversed;
             CurrentWeight = gm.HandsEvaluator.GetHandsWeight(CurrentHandsType, gm.CurrentPlay, IsReversed);
+            CurrentWeight = Math.Abs(CurrentWeight);
 
             DiscardPile = gm.DiscardPile?.ToList() ?? new List<Card>();
 

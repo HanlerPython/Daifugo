@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using test01.Controller.States.GameStates;
 using test01.Model;
 using test01.Model.Interfaces;
+using static test01.Model.Interfaces.GreedyAIStrategy;
 
 namespace test01.Controller
 {
@@ -34,8 +35,8 @@ namespace test01.Controller
         public GreedyAIStrategy Ai { get; }
 
 
-        //當玩家手牌張數發生變化時觸發
-        public event EventHandler OnPlayerHandChanged;
+        //當手牌張數發生變化時觸發
+        public event EventHandler OnHandChanged;
         //使外部改變牌桌狀態
         public event EventHandler OnDeskChanged;
         //觸發輪到玩家時的前置作業
@@ -45,12 +46,12 @@ namespace test01.Controller
         //革命時改變背景顏色
         public event EventHandler OnRevolutionStarted;
         public event EventHandler OnRevolutionEnded;
-        public GameManager()
+        public GameManager(Difficulty difficulty)
         {
             _players = new List<Player>();
             Deck = new Deck();
             HandsEvaluator = new HandsEvaluator();
-            Ai = new GreedyAIStrategy();
+            Ai = new GreedyAIStrategy(difficulty);
         }
         public void Initialize()
         {
@@ -87,7 +88,7 @@ namespace test01.Controller
         public IEnumerable<Card> UpdateRecommendations(IEnumerable<Card> selectedCards)
         {
             //非遊玩階段(例如換牌階段)不會推薦牌型
-            if (!(_currentState is PlayerTurnState))
+            if (_currentState is not PlayerTurnState)
             {
                 return null;
             }
@@ -127,13 +128,14 @@ namespace test01.Controller
 
             return false;
         }
-        public void NotifyPlayerHandChanged()
+        public void NotifyHandChanged()
         {
-            OnPlayerHandChanged?.Invoke(this, EventArgs.Empty);
+            OnHandChanged?.Invoke(this, EventArgs.Empty);
         }
         public void NotifyDeskChanged()
         {
             OnDeskChanged?.Invoke(this, EventArgs.Empty);
+            OnHandChanged?.Invoke(this, EventArgs.Empty);
         }
         public void NotifyPlayerTurnStarted()
         {

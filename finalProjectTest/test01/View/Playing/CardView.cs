@@ -15,31 +15,39 @@ namespace test01.View.Playing
         public Card Card { get; }
         public bool IsSelected { get; private set; }
         private bool _isHovering;
+        private readonly bool _isFaceDown;
         public event EventHandler OnCardPlayed;
         public event EventHandler OnSelectionChanged;
 
-        public CardView(Card card)
+        public CardView(Card card, bool isFaceDown)
         {
             this.IsSelected = false;
             this._isHovering = false;
+            this._isFaceDown = isFaceDown;
             this.Card = card;
 
             UpdateImage();
             if (this.Image != null)
             {
-                this.Width = this.Image.Width;
-                this.Height = this.Image.Height;
+                this.Width = (int)(this.Image.Width * 1.5f);
+                this.Height = (int)(this.Image.Height * 1.5f);
                 this.SizeMode = PictureBoxSizeMode.StretchImage;
             }
 
-            this.MouseEnter += CardView_MouseEnter;
-            this.MouseLeave += CardView_MouseLeave;
-            this.Click += CardView_Click;
-            this.DoubleClick += CardView_Click; //避免點擊過快時無法觸發一般Click
+            if (!isFaceDown)
+            {
+                this.MouseEnter += CardView_MouseEnter;
+                this.MouseLeave += CardView_MouseLeave;
+                this.Click += CardView_Click;
+                this.DoubleClick += CardView_Click; //避免點擊過快時無法觸發一般Click
+            }
         }
         public void UpdateImage()
         {
-            this.Image = ResourceManager.GetCardFaceImage(Card.SuitType, Card.RankType);
+            if (_isFaceDown)
+                this.Image = ResourceManager.GetCardBackImage();
+            else
+                this.Image = ResourceManager.GetCardFaceImage(Card.SuitType, Card.RankType);
         }
         public void Unselect()
         {
@@ -93,27 +101,21 @@ namespace test01.View.Playing
             if (!this.Enabled)
             {
                 //繪製半透明的灰色遮罩
-                using (SolidBrush disabledBrush = new SolidBrush(Color.FromArgb(128, Color.Gray)))
-                {
-                    pe.Graphics.FillRectangle(disabledBrush, 0, 0, this.Width, this.Height);
-                }
+                using SolidBrush disabledBrush = new(Color.FromArgb(128, Color.Gray));
+                pe.Graphics.FillRectangle(disabledBrush, 0, 0, this.Width, this.Height);
             }
             else if (IsSelected)
             {
                 //畫綠色粗邊框
-                using (Pen pen = new Pen(Color.Green, 5))
-                {
-                    //內縮避免邊框被裁剪
-                    pe.Graphics.DrawRectangle(pen, 2, 2, this.Width - 5, this.Height - 5);
-                }
+                using Pen pen = new(Color.Green, 5);
+                //內縮避免邊框被裁剪
+                pe.Graphics.DrawRectangle(pen, 2, 2, this.Width - 5, this.Height - 5);
             }
             else if (_isHovering)
             {
                 //畫黃色細邊框
-                using (Pen pen = new Pen(Color.Yellow, 3))
-                {
-                    pe.Graphics.DrawRectangle(pen, 1, 1, this.Width - 3, this.Height - 3);
-                }
+                using Pen pen = new(Color.Yellow, 3);
+                pe.Graphics.DrawRectangle(pen, 1, 1, this.Width - 3, this.Height - 3);
             }
         }
     }

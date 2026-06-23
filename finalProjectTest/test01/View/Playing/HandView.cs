@@ -22,15 +22,25 @@ namespace test01.View.Playing
             InitializeComponent();
             this.AutoScaleMode = AutoScaleMode.None;
             _cardViews = new List<CardView>();
+
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.UserPaint |
+                          ControlStyles.OptimizedDoubleBuffer, true);
+            this.UpdateStyles();
         }
         public void Initialize(GameManager gameManager)
         {
             _gameManager = gameManager;
-            _gameManager.OnPlayerHandChanged += HandleHandChanged;
+            _gameManager.OnHandChanged += HandleHandChanged;
             _gameManager.OnPlayerTurnStarted += HandlePlayerTurnStarted;
+
+            
         }
         public void Draw(IEnumerable<Card> hand)
         {
+            this.SuspendLayout();
+
             var oldCards = this.Controls.Cast<Control>().ToList();
             this.Controls.Clear();
             _cardViews.Clear();
@@ -40,12 +50,15 @@ namespace test01.View.Playing
             }
 
             if (!hand.Any())
+            {
+                this.ResumeLayout(true);
                 return;
-
+            }
+                
             int y = 10; //預留選取上浮空間
             foreach (var card in hand)
             {
-                CardView cardView = new CardView(card)
+                CardView cardView = new(card, false)
                 {
                     //x的位置透過OnLayout統一計算
                     Location = new Point(0, y)
@@ -55,7 +68,9 @@ namespace test01.View.Playing
 
                 _cardViews.Add(cardView);
                 this.Controls.Add(cardView);
+                cardView.BringToFront();
             }
+            this.ResumeLayout(true);
         }
         public void Unselect()
         {
@@ -73,7 +88,7 @@ namespace test01.View.Playing
             if (_gameManager.CurrentPlayerIdx != 0)
                 return;
 
-            List<Card> selectedCards = new List<Card>();
+            List<Card> selectedCards = new();
             foreach (Control control in this.Controls)
             {
                 if (control is CardView cardView && cardView.IsSelected)
@@ -93,7 +108,7 @@ namespace test01.View.Playing
                 return;
             }
 
-            List<Card> cards = new List<Card>();
+            List<Card> cards = new();
 
             foreach (Control control in this.Controls)
             {
@@ -124,7 +139,7 @@ namespace test01.View.Playing
         {
             Unselect();
             //主動觸發推薦手牌
-            List<Card> cards = new List<Card>();
+            List<Card> cards = new();
             UpdateRecommendations(cards);
         }
         private void UpdateRecommendations(IEnumerable<Card> selectedCards)
@@ -158,7 +173,7 @@ namespace test01.View.Playing
             if (_cardViews == null || !_cardViews.Any())
                 return;
 
-            int spacing = 45;
+            int spacing = 30;
             int cardWidth = _cardViews[0].Width;
             int totalWidth = ((_cardViews.Count - 1) * spacing) + cardWidth;
             int startX = (this.ClientSize.Width - totalWidth) / 2;

@@ -11,15 +11,15 @@ namespace test01.View.Playing
 {
     public partial class DeskView : UserControl
     {
-        private readonly Label _infoLabel; // 顯示：「玩家 [張三] 打出：」
-        private readonly List<PictureBox> _displayedCards; // 顯示打出的卡牌圖片
+        private readonly Label _infoLabel; //顯示：「玩家 [] 打出：」
+        private readonly List<PictureBox> _displayedCards; //顯示打出的卡牌圖片
         private GameManager _gameManager;
 
         public DeskView()
         {
             InitializeComponent();
             this.AutoScaleMode = AutoScaleMode.None;
-            this.BackColor = Color.Transparent; // 讓底色透過去，看得到遊戲背景
+            this.BackColor = Color.Transparent;
             _displayedCards = new List<PictureBox>();
 
             //設置位置
@@ -28,7 +28,7 @@ namespace test01.View.Playing
                 AutoSize = true,
                 ForeColor = Color.White,
                 Font = new Font("Microsoft JhengHei", 12, FontStyle.Bold),
-                Location = new Point(20, 20) // 或透過 OnLayout 置中
+                Location = new Point(20, 0)
             };
             this.Controls.Add(_infoLabel);
         }
@@ -60,25 +60,25 @@ namespace test01.View.Playing
 
             _infoLabel.Text = $"當前玩家: {playerName}";
 
-            // 動態生成並排列打出的卡牌（位置計算邏輯可封裝在 OnLayout 或在此直接計算）
-            int y = 69;
-            int spacing = 30;//重疊在一起
-            int cardWidth = 60;
+            //動態生成並排列打出的卡牌
+            int y = 50;
+            int spacing = 30; //重疊在一起
+            int cardWidth = (int)(60 * 1.2f);
+            int cardHeight = (int)(80 * 1.2f);
             int totalWidth = ((_displayedCards.Count - 1) * spacing) + cardWidth;
             int startX = (this.ClientSize.Width - totalWidth) / 2;
             
 
             foreach (var card in playedCards)
             {
-                PictureBox cardImg = new PictureBox
+                PictureBox cardImg = new()
                 {
                     Image = ResourceManager.GetCardFaceImage(card.SuitType, card.RankType),
                     SizeMode = PictureBoxSizeMode.StretchImage,
-                    Location = new Point(startX, y)
+                    Location = new Point(startX, y),
+                    Width = cardWidth,
+                    Height = cardHeight
                 };
-                // 設定圖片大小（通常比手牌稍微小一點點作為視覺區隔）
-                cardImg.Width = 60;
-                cardImg.Height = 80;
 
                 _displayedCards.Add(cardImg);
                 this.Controls.Add(cardImg);

@@ -20,7 +20,7 @@ namespace test01.Controller.States.GameStates
             {
                 await Task.Delay(500); //模擬思考時間
                 var currentAi = gm.Players[gm.CurrentPlayerIdx];
-                GameSnapshot gs = new GameSnapshot(gm);
+                GameSnapshot gs = new(gm);
                 var cardsToPlay = gm.Ai.DecidePlay(gs, currentAi.Hand);
                 if (cardsToPlay.Any())
                     PlayCard(gm, cardsToPlay);
@@ -53,7 +53,6 @@ namespace test01.Controller.States.GameStates
                 else //人機
                     playHands = Hands.Flush; //默認為同花順
             }
-
             gm.PassCount = 0;
             int index = gm.CurrentPlayerIdx;
             var CurrentPlayer = gm.Players[index];
@@ -66,7 +65,7 @@ namespace test01.Controller.States.GameStates
             gm.NotifyDeskChanged();
 
             //若這輪還沒結束
-            if(!gm.CheckFinished())
+            if (!gm.CheckFinished())
                 gm.ChangeState(new SpecialActionState());
 
             return true;
