@@ -15,10 +15,15 @@ namespace test01.Utils
     public static class ResourceManager
     {
         private static readonly Dictionary<(Suit Suit, Rank Rank), Image> _cardFaceImages =
-            new Dictionary<(Suit, Rank), Image>();
+            new();
         private static Image _cardBackImage;
         private static SoundPlayer _currentBgmPlayer;
-        private static readonly Dictionary<string, SoundPlayer> _bgm = new Dictionary<string, SoundPlayer>();
+        private static readonly Dictionary<string, SoundPlayer> _bgm = new();
+        private static readonly Image[] _buttonImage = new Image[3];
+        private static Image _titlleImage;
+        private static Image _creditsBackImage;
+        private static readonly Image[] _playerFrameImage = new Image[4];
+        private static readonly Image[] _playerAvatarImage = new Image[4];
 
         public static void Initialize()
         {
@@ -61,6 +66,33 @@ namespace test01.Utils
             path = Path.Combine(baseDir, "JOKER_RED.png");
             _cardFaceImages[(Suit.JOKER, Rank.RED)] = Image.FromFile(path);
 
+            //按鈕圖片
+            path = Path.Combine(baseDir, "btn_default.png");
+            _buttonImage[0] = Image.FromFile(path);
+
+            path = Path.Combine(baseDir, "btn_hover.png");
+            _buttonImage[1] = Image.FromFile(path);
+
+            path = Path.Combine(baseDir, "btn_pressed.png");
+            _buttonImage[2] = Image.FromFile(path);
+
+            //玩家頭像與邊框
+            for(int i = 0; i < 4; i++)
+            {
+                path = Path.Combine(baseDir, $"player_frame_{i}.png");
+                _playerFrameImage[i] = Image.FromFile(path);
+                path = Path.Combine(baseDir, $"player_avatar_{i}.png");
+                _playerAvatarImage[i] = Image.FromFile(path);
+            }
+
+            //標題圖片
+            path = Path.Combine(baseDir, "title.png");
+            _titlleImage = Image.FromFile(path);
+
+            //製作人員名單背景圖片
+            path = Path.Combine(baseDir, "credits_back.png");
+            _creditsBackImage = Image.FromFile(path);
+
             //音訊檔案
             baseDir = Path.Combine(Application.StartupPath, "Assets/audio");
             path = Path.Combine(baseDir, "bgm.wav");
@@ -79,6 +111,38 @@ namespace test01.Utils
         public static Image GetCardBackImage()
         {
             return _cardBackImage;
+        }
+        public static Image GetButtonImage(int state)
+        {
+            if (state >= 0 && state < _buttonImage.Length)
+            {
+                return _buttonImage[state];
+            }
+            return null;
+        }
+        public static Image GetTitleImage()
+        {
+            return _titlleImage;
+        }
+        public static Image GetCreditsBackImage()
+        {
+            return _creditsBackImage;
+        }
+        public static Image GetPlayerFrameImage(int index)
+        {
+            if (index >= 0 && index < 4)
+            {
+                return _playerFrameImage[index];
+            }
+            return null;
+        }
+        public static Image GetPlayerAvatarImage(int index)
+        {
+            if (index >= 0 && index < 4)
+            {
+                return _playerAvatarImage[index];
+            }
+            return null;
         }
         public static void PlayBgm(string bgmKey)
         {

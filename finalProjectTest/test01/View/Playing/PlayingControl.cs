@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using test01.Controller;
+using test01.Utils;
 
 namespace test01.View.Playing
 {
@@ -15,9 +16,12 @@ namespace test01.View.Playing
     {
         public HandView Hand => this._hand;
         public DeskView Desk => this._deskView;
+        public AiHandView TopAiHand => this._topAiHand;
+        public AiHandView LeftAiHand => this._leftAiHand;
+        public AiHandView RightAiHand => this._rightAiHand;
         private GameManager _gameManager;
 
-        public event Action OnPassRequested;
+        public event EventHandler OnPlayerPass;
         public PlayingControl()
         {
             InitializeComponent();
@@ -37,8 +41,18 @@ namespace test01.View.Playing
             _gameManager = gameManager;
             _gameManager.OnRevolutionStarted += HandleRevolutionStarted;
             _gameManager.OnRevolutionEnded += HandleRevolutionEnded;
+
             this._hand.Initialize(gameManager);
             this._deskView.Initialize(gameManager);
+            this._leftAiHand.PlayerIndex = 1;  
+            this._leftAiHand.Initialize(gameManager);
+            this._topAiHand.PlayerIndex = 2;
+            this._topAiHand.Initialize(gameManager);
+            this._rightAiHand.PlayerIndex = 3; 
+            this._rightAiHand.Initialize(gameManager);
+
+            _passBtn.BackgroundImage = ResourceManager.GetButtonImage(0);
+            _passBtn.BackgroundImageLayout = ImageLayout.Stretch;
         }
         private void BindBackgroundClick(Control parent)
         {
@@ -60,12 +74,27 @@ namespace test01.View.Playing
         }
         private void PassBtn_Click(object sender, EventArgs e)
         {
-            //非自己回合Pass不會觸發
-            if (_gameManager.CurrentPlayerIdx != 0)
-                return;
-
-            //對外廣播pass觸發事件
-            OnPassRequested?.Invoke();
+            OnPlayerPass?.Invoke(this, EventArgs.Empty);
+        }
+        private void PassBtn_MouseHover(object sender, EventArgs e)
+        {
+            if (sender is Control btn)
+                btn.BackgroundImage = ResourceManager.GetButtonImage(1);
+        }
+        private void PassBtn_MouseLeave(object sender, EventArgs e)
+        {
+            if (sender is Control btn)
+                btn.BackgroundImage = ResourceManager.GetButtonImage(0);
+        }
+        private void PassBtn_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (sender is Control btn)
+                btn.BackgroundImage = ResourceManager.GetButtonImage(2);
+        }
+        private void PassBtn_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (sender is Control btn)
+                btn.BackgroundImage = ResourceManager.GetButtonImage(1);
         }
         private void HandleRevolutionStarted(object sender, EventArgs e)
         {
@@ -73,7 +102,7 @@ namespace test01.View.Playing
         }
         private void HandleRevolutionEnded(object sender, EventArgs e)
         {
-            this.BackColor = Color.FromArgb(40, 44, 52);
+            this.BackColor = Color.FromArgb(42, 168, 67);
         }
     }
 }
