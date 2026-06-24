@@ -66,31 +66,6 @@ namespace test01.Model
             else if (currentHandsType == Hands.Flush)
                 validPlays.AddRange(GetValidFlushes(playerHand, currentCount, currentWeight, isReversed));
 
-            if (currentCount > 0)
-            {
-                var allBombs = GenerateAllSameRanks(playerHand).Where(p => p.Count() >= 4).ToList();
-                var allFlushBombs = GenerateAllFlushes(playerHand).Where(p => p.Count() >= 4).ToList();
-                var allAvailableBombs = allBombs.Concat(allFlushBombs).ToList();
-
-                foreach (var bomb in allAvailableBombs)
-                {
-                    //只有當場上「本來就已經是炸彈 (張數>=4)」時，才能出張數更多或權重更大的炸彈！
-                    if (currentCount >= 4)
-                    {
-                        if (bomb.Count() > currentCount)
-                        {
-                            validPlays.Add(bomb);
-                        }
-                        else if (bomb.Count() == currentCount)
-                        {
-                            int bombWeight = bomb.First(c => c.SuitType != Card.Suit.JOKER).Weight;
-                            bool canBeat = isReversed ? (bombWeight < currentWeight) : (bombWeight > currentWeight);
-                            if (canBeat) validPlays.Add(bomb);
-                        }
-                    }
-                }
-            }
-
             if (IsSuitLocked && currentCount > 0)
             {
                 var lockedPlays = new List<IEnumerable<Card>>();
@@ -98,28 +73,21 @@ namespace test01.Model
 
                 foreach (var play in validPlays)
                 {
-                    // 特權 A: PASS 永遠合法
+                    //PASS 永遠合法
                     if (!play.Any())
                     {
                         lockedPlays.Add(play);
                         continue;
                     }
 
-                    // 特權 B: 炸彈 (4張以上) 擁有破壞鎖定的特權，絕對合法
-                    if (play.Count() >= 4)
-                    {
-                        lockedPlays.Add(play);
-                        continue;
-                    }
-
-                    // 特權 C: Joker 是法外狂徒，打出的牌只要全是 Joker 就放行
+                    //Joker無視鎖花色
                     if (play.All(c => c.SuitType == Card.Suit.JOKER))
                     {
                         lockedPlays.Add(play);
                         continue;
                     }
 
-                    // 一般判定：檢查花色是否精準匹配
+                    //檢查花色是否精準匹配
                     var providedSuits = play.Where(c => c.SuitType != Card.Suit.JOKER).Select(c => c.SuitType).ToList();
                     bool isMatch = true;
 
@@ -127,7 +95,7 @@ namespace test01.Model
                     {
                         if (providedSuits.Contains(reqSuit))
                         {
-                            providedSuits.Remove(reqSuit); // 匹配成功，消耗掉一個 (支援未來如果加開雙重鎖定)
+                            providedSuits.Remove(reqSuit);
                         }
                         else
                         {
@@ -148,7 +116,7 @@ namespace test01.Model
             {
                 var spade3 = playerHand.FirstOrDefault(c => c.RankType == Card.Rank.THREE && c.SuitType == Card.Suit.SPADES);
 
-                // 防呆：確保黑桃3還沒被前面的邏輯加進去
+                //確保黑桃3還沒被前面的邏輯加進去
                 if (spade3 != null && !validPlays.Any(p => p.Count() == 1 && p.First() == spade3))
                 {
                     validPlays.Add(new List<Card> { spade3 });
@@ -210,7 +178,7 @@ namespace test01.Model
                         int rankSpread = cards[j].Weight - cards[i].Weight + 1;
                         int internalGaps = rankSpread - actualCards;
 
-                        // 攤平嵌套：提早 return 或 continue
+                        //絕對不行就return 或 continue
                         if (internalGaps > jokerCount) continue;
 
                         int totalPotentialLength = actualCards + jokerCount;
@@ -251,7 +219,7 @@ namespace test01.Model
                 int weight = group.Key;
                 bool isValidWeight;
 
-                // 如果場上是鬼牌 (權重 >= 13)，一般牌絕對無法壓制！
+                //如果場上是鬼牌 (權重 >= 13)，一般牌無法壓制
                 if (currentWeight >= 13)
                 {
                     isValidWeight = false;
@@ -302,15 +270,7 @@ namespace test01.Model
                         int maxPossibleWeight = cards[i].Weight + requiredCount - 1;
                         bool isValidWeight;
 
-                        // 如果場上的同花順包含頂級鬼牌權重，嚴禁一般同花順用反轉邏輯壓制
-                        if (currentWeight >= 13)
-                        {
-                            isValidWeight = false;
-                        }
-                        else
-                        {
-                            isValidWeight = isReversed ? (cards[i].Weight < currentWeight) : (maxPossibleWeight > currentWeight);
-                        }
+                        isValidWeight = isReversed ? (cards[i].Weight < currentWeight) : (maxPossibleWeight > currentWeight);
 
                         if (isValidWeight)
                         {

@@ -39,6 +39,13 @@ namespace test01.Controller.States.GameStates
             Player daihinmin = null;
             foreach(Player p in gm.Players)
             {
+                var cards = new List<Card>
+                {
+                    new Card(Card.Suit.JOKER, Card.Rank.RED),
+                    new Card(Card.Suit.JOKER, Card.Rank.RED)
+                };
+                p.AddCards(cards);
+
                 p.AddCards(gm.Deck.Draw(13));
                 switch (p.Rank)
                 {

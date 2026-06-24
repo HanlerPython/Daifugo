@@ -45,6 +45,9 @@ namespace test01.Model
                     return null;
                 }
 
+                //排序整齊
+                selectedCards = selectedCards.OrderBy(c => c.Weight).ThenBy(c => c.SuitType).ToList();
+
                 int selJokerCnt = GetJokerCount(selectedCards); //選中牌中joker的數量
                 int nonJokerCardsCnt = selectedCards.Count() - selJokerCnt;
                 if (nonJokerCardsCnt == 0)

@@ -53,6 +53,7 @@ namespace test01.Controller.States.GameStates
                 else //人機
                     playHands = Hands.Flush; //默認為同花順
             }
+
             gm.PassCount = 0;
             int index = gm.CurrentPlayerIdx;
             var CurrentPlayer = gm.Players[index];
@@ -63,6 +64,7 @@ namespace test01.Controller.States.GameStates
             gm.LastPlay = gm.CurrentPlay;
             gm.CurrentPlay = sortedPlay;
             gm.NotifyDeskChanged();
+            gm.NotifyHandChanged();
 
             //若這輪還沒結束
             if (!gm.CheckFinished())

@@ -125,9 +125,6 @@ namespace test01.View.Playing
                     Unselect();
                     return;
                 }
-                else
-                    //更新當前玩家手牌
-                    Invoke(new Action(() => HandleHandChanged(sender, e)));
             }
         }
         private void HandleHandChanged(object sender, EventArgs e)

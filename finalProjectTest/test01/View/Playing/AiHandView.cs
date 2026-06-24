@@ -45,8 +45,7 @@ namespace test01.View.Playing
             _playerIndex = playerIndex;
             _cardViews = new List<CardView>();
 
-            // 開啟雙緩衝
-            // 讓 WinForms 在記憶體默默畫好再貼上，徹底解決 Clear() 時露出的黑影
+            //開啟雙緩衝，在記憶體畫好再貼上，解決閃爍問題
             this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.UserPaint |
@@ -158,19 +157,19 @@ namespace test01.View.Playing
                     }
                 }
 
-                // 計算純卡牌排列出來的總高度
+                //計算純卡牌排列出來的總高度
                 int totalCardsHeight = ((_cardViews.Count - 1) * spacing) + cardHeight;
-                // 整體大區塊的總高度（名字 + 間距 + 卡牌）
+                //整體大區塊的總高度（名字 + 間距 + 卡牌）
                 int totalBlockHeight = labelHeight + gap + totalCardsHeight;
 
-                // 計算這個大區塊在整條 Dock 空間裡的置中起點 Y
+                //計算這個大區塊在整條 Dock 空間裡的置中起點 Y
                 int blockStartY = (this.ClientSize.Height - totalBlockHeight) / 2;
 
-                // 1. 定位名字：就在大區塊的最頂端
+                //名字在大區塊的最頂端
                 _nameLabel.Top = blockStartY;
                 _nameLabel.Left = 0;
 
-                // 2. 定位卡牌：接在名字與間距的下方
+                //卡牌接在名字與間距的下方
                 int startY = blockStartY + labelHeight + gap;
 
                 for (int i = 0; i < _cardViews.Count; i++)

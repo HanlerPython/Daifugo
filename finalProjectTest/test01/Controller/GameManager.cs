@@ -55,9 +55,9 @@ namespace test01.Controller
         }
         public void Initialize()
         {
-            _players.Add(new Player(0, "Yaju Senpai"));
-            _players.Add(new Player(1, "Chisa"));
-            _players.Add(new Player(2, "Yachiyo"));
+            _players.Add(new Player(0, "野獸先輩"));
+            _players.Add(new Player(1, "千咲"));
+            _players.Add(new Player(2, "八千代"));
             _players.Add(new Player(3, "Doro"));
             //進入輪次事前準備
             ChangeState(new RoundInitState());
@@ -135,7 +135,6 @@ namespace test01.Controller
         public void NotifyDeskChanged()
         {
             OnDeskChanged?.Invoke(this, EventArgs.Empty);
-            OnHandChanged?.Invoke(this, EventArgs.Empty);
         }
         public void NotifyPlayerTurnStarted()
         {
