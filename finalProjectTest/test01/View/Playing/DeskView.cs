@@ -41,7 +41,11 @@ namespace test01.View.Playing
         }
         public void HandleDeskChanged(object sender, EventArgs e)
         {
-            string playerName = _gameManager.Players[_gameManager.CurrentPlayerIdx].Name;
+            string playerName;
+            if (_gameManager.CurrentPlayerIdx == -1)
+                playerName = "無";
+            else
+                playerName = _gameManager.Players[_gameManager.CurrentPlayerIdx].Name;
             IEnumerable<Card> playedCards = _gameManager.CurrentPlay;
 
             //清理舊卡牌圖片
